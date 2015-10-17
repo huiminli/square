@@ -1,2 +1,3 @@
 # square
-game of squares
+
+Game of squares, yay!
