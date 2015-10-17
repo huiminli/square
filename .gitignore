@@ -1,0 +1,5 @@
+# OS junk files
+*.DS_Store
+
+# xcode config files
+square/square.xcodeproj/
