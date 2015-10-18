@@ -1,8 +1,10 @@
 #include "stdafx.h"
-#include "timer.h"
 
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+namespace {
+	const int SCREEN_WIDTH = 640;
+	const int SCREEN_HEIGHT = 480;
+	const int GAME_FRAME_MS = 10;
+}
 
 struct SDL {
 public:
@@ -26,54 +28,6 @@ struct SDL_GLContextDeleter {
 	}
 };
 
-void startMainLoop() {
-  //The frames per second
-  const int FRAMES_PER_SECOND = 20;
-
-  //Main loop flag
-  bool quit = false;
-  
-  //Event handler
-  SDL_Event e;
-
-  //The frame rate regulator
-  Timer fps;
-
-  //Temp variable for testing frame
-  int frame = 1;
-
-  //While application is running
-  while( !quit )
-  {
-    //Start the frame timer
-    fps.start();
-
-    //Handle events on queue
-    while( SDL_PollEvent( &e ) != 0 )
-    {
-      //User requests quit
-      if( e.type == SDL_QUIT )
-      {
-        quit = true;
-      }
-      
-      //Handle event on models
-    }
-
-    //Update screen and render
-    printf("current frame: %d", frame);
-
-    //Increment the frame counter
-    frame++;
-
-    //If we want to cap the frame rate
-    if((fps.get_ticks() < 1000 / FRAMES_PER_SECOND ))
-    {
-      //Sleep the remaining frame time
-      SDL_Delay((1000 / FRAMES_PER_SECOND ) - fps.get_ticks());
-    }
-  }
-}
 
 int main( int argc, char* args[] )
 {
@@ -103,15 +57,39 @@ int main( int argc, char* args[] )
   std::unique_ptr<void, SDL_GLContextDeleter> glContext(SDL_GL_CreateContext(window.get()));
 
   glOrtho(0.0, SCREEN_WIDTH, 0.0, SCREEN_HEIGHT, -1.0, 1.0);
-  glClear(GL_COLOR_BUFFER_BIT);
-  glColor3f(1.0f, 1.0f, 1.0f);
-  glRectf(0.0, 0.0, 100.0, 100.0);
-  SDL_GL_SwapWindow(window.get());
 
-  startMainLoop();
+	float x = 0.0f;
+	float y = 0.0f;
 
-  //Quit SDL subsystems
-  SDL_Quit();
-  
-  return 0;
+	unsigned lastSimulationTimeMs = SDL_GetTicks();
+	while (true) {
+		unsigned now = SDL_GetTicks();
+
+		SDL_Event e;
+		while (SDL_PollEvent(&e) != 0)
+		{
+			if (e.type == SDL_QUIT)
+			{
+				return 0;
+			}
+		}
+
+		if (now - lastSimulationTimeMs < GAME_FRAME_MS) {
+			SDL_WaitEventTimeout(NULL, now - lastSimulationTimeMs);
+			continue;
+		}
+
+		while (now - lastSimulationTimeMs >= GAME_FRAME_MS) {
+			lastSimulationTimeMs += GAME_FRAME_MS;
+
+			x += 1.0f;
+			y += 1.0f;
+		}
+
+		glClear(GL_COLOR_BUFFER_BIT);
+		glColor3f(1.0f, 1.0f, 1.0f);
+		glRectf(x, y, x + 100.0f, y + 100.0f);
+
+		SDL_GL_SwapWindow(window.get());
+	}
 }
