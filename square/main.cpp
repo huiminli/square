@@ -71,6 +71,14 @@ int main( int argc, char* args[] )
       if (e.type == SDL_QUIT)
       {
         return 0;
+      } else if (e.type == SDL_KEYDOWN)
+      {
+        switch (e.key.keysym.sym) {
+          case SDLK_UP: y += 5.0f; break;
+          case SDLK_DOWN: y -= 5.0f; break;
+          case SDLK_LEFT: x -= 5.0f; break;
+          case SDLK_RIGHT: x += 5.0f; break;
+        }
       }
     }
 
@@ -82,8 +90,8 @@ int main( int argc, char* args[] )
     while (now - lastSimulationTimeMs >= GAME_FRAME_MS) {
       lastSimulationTimeMs += GAME_FRAME_MS;
 
-      x += 1.0f;
-      y += 1.0f;
+//      x += 1.0f;
+//      y += 1.0f;
     }
 
     glClear(GL_COLOR_BUFFER_BIT);
