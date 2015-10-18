@@ -18,6 +18,13 @@ struct SDL_WindowDeleter
 	}
 };
 
+struct SDL_GLContextDeleter {
+	void operator()(SDL_GLContext glContext) const
+	{
+		SDL_GL_DeleteContext(glContext);
+	}
+};
+
 int main( int argc, char* args[] )
 {
 		SDL sdl;
@@ -27,13 +34,15 @@ int main( int argc, char* args[] )
 				return 1;
     }
 
+		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+
 		std::unique_ptr<SDL_Window, SDL_WindowDeleter> window(SDL_CreateWindow(
 				"SDL Tutorial",
 				SDL_WINDOWPOS_UNDEFINED,
 				SDL_WINDOWPOS_UNDEFINED,
 				SCREEN_WIDTH,
 				SCREEN_HEIGHT,
-				SDL_WINDOW_SHOWN));
+				SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN));
 
     if(!window)
     {
@@ -41,10 +50,14 @@ int main( int argc, char* args[] )
 				return 1;
     }
 
-		SDL_Surface* screenSurface = SDL_GetWindowSurface(window.get());
-    SDL_FillRect( screenSurface, NULL, SDL_MapRGB( screenSurface->format, 0xFF, 0xFF, 0xFF ) );
-		SDL_UpdateWindowSurface(window.get());
+		std::unique_ptr<void, SDL_GLContextDeleter> glContext(SDL_GL_CreateContext(window.get()));
+
+		glOrtho(0.0, SCREEN_WIDTH, 0.0, SCREEN_HEIGHT, -1.0, 1.0);
+		glClear(GL_COLOR_BUFFER_BIT);
+		glColor3f(1.0f, 1.0f, 1.0f);
+		glRectf(0.0, 0.0, 100.0, 100.0);
+		SDL_GL_SwapWindow(window.get());
+
 		SDL_Delay(2000);
-    
     return 0;
 }
