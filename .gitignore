@@ -2,6 +2,10 @@ include/
 lib/
 thirdparty/
 
+# Ignore all xcode proj files except the pbxproj one
+square.xcodeproj/*
+!square.xcodeproj/project.pbxproj
+
 # OS junk files
 *.DS_Store
 
