@@ -28,6 +28,21 @@ struct SDL_GLContextDeleter {
   }
 };
 
+struct Universe {
+public:
+	void update(long dt) {
+		x += (rightPressed - leftPressed) * dt / 20.0f + dt / 1000.0f; 
+		y += (upPressed - downPressed) * dt / 20.0f + dt / 1000.0f;
+	}
+
+	bool upPressed = false;
+	bool downPressed = false;
+	bool leftPressed = false;
+	bool rightPressed = false;
+	float x = 0.0f;
+	float y = 0.0f;
+};
+
 
 int main( int argc, char* args[] )
 {
@@ -58,9 +73,8 @@ int main( int argc, char* args[] )
 
   glOrtho(0.0, SCREEN_WIDTH, 0.0, SCREEN_HEIGHT, -1.0, 1.0);
 
-  float x = 0.0f;
-  float y = 0.0f;
 
+	Universe universe;
   unsigned lastSimulationTimeMs = SDL_GetTicks();
   while (true) {
     unsigned now = SDL_GetTicks();
@@ -71,15 +85,25 @@ int main( int argc, char* args[] )
       if (e.type == SDL_QUIT)
       {
         return 0;
-      } else if (e.type == SDL_KEYDOWN)
+      }
+			else if (e.type == SDL_KEYDOWN)
       {
         switch (e.key.keysym.sym) {
-          case SDLK_UP: y += 5.0f; break;
-          case SDLK_DOWN: y -= 5.0f; break;
-          case SDLK_LEFT: x -= 5.0f; break;
-          case SDLK_RIGHT: x += 5.0f; break;
+          case SDLK_UP: universe.upPressed = true; break;
+          case SDLK_DOWN: universe.downPressed = true; break;
+          case SDLK_LEFT: universe.leftPressed = true; break;
+          case SDLK_RIGHT: universe.rightPressed = true; break;
         }
       }
+			else if (e.type == SDL_KEYUP)
+			{
+				switch (e.key.keysym.sym) {
+				case SDLK_UP: universe.upPressed = false; break;
+				case SDLK_DOWN: universe.downPressed = false; break;
+				case SDLK_LEFT: universe.leftPressed = false; break;
+				case SDLK_RIGHT: universe.rightPressed = false; break;
+				}
+			}
     }
 
     if (now - lastSimulationTimeMs < GAME_FRAME_MS) {
@@ -89,14 +113,12 @@ int main( int argc, char* args[] )
 
     while (now - lastSimulationTimeMs >= GAME_FRAME_MS) {
       lastSimulationTimeMs += GAME_FRAME_MS;
-
-//      x += 1.0f;
-//      y += 1.0f;
+			universe.update(GAME_FRAME_MS);
     }
 
     glClear(GL_COLOR_BUFFER_BIT);
     glColor3f(1.0f, 1.0f, 1.0f);
-    glRectf(x, y, x + 100.0f, y + 100.0f);
+    glRectf(universe.x, universe.y, universe.x + 100.0f, universe.y + 100.0f);
 
     SDL_GL_SwapWindow(window.get());
   }
