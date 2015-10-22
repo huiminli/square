@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
 namespace {
-  const int SCREEN_WIDTH = 640;
-  const int SCREEN_HEIGHT = 480;
-  const int GAME_FRAME_MS = 10;
+  const int SCREEN_WIDTH = 800;
+  const int SCREEN_HEIGHT = 600;
+  const int UNIVERSE_TICK_MS = 10;
 }
 
 struct SDL {
@@ -31,16 +31,63 @@ struct SDL_GLContextDeleter {
 struct Universe {
 public:
 	void update(long dt) {
-		x += (rightPressed - leftPressed) * dt / 20.0f + dt / 1000.0f; 
-		y += (upPressed - downPressed) * dt / 20.0f + dt / 1000.0f;
+		
+		// On the ground.
+		if (playerY < 0.001f) {
+			playerVelocityX += (rightPressed - leftPressed) / 90.0f;
+			playerVelocityY += (upPressed - downPressed) / 2.0f;
+			playerVelocityX = std::max(-playerMaxVelocity, std::min(playerMaxVelocity, playerVelocityX));
+
+			if (playerVelocityX >= 0.0f) {
+				playerVelocityX = std::max(0.0f, playerVelocityX - friction * dt);
+			}
+			else {
+				playerVelocityX = std::min(0.0f, playerVelocityX + friction * dt);
+			}
+		}
+
+		playerVelocityY -= gravity * dt;
+
+		playerX += playerVelocityX * dt;
+		playerY += playerVelocityY * dt;
+
+		// Clamp position.
+		if (playerX < 0) 
+		{
+			playerX = 0.0f;
+			playerVelocityX = 0.0f;
+		}
+		else if (playerX > SCREEN_WIDTH - playerWidth)
+		{
+			playerX = SCREEN_WIDTH - playerWidth;
+			playerVelocityX = 0.0f;
+		}
+
+		if (playerY < 0)
+		{
+			playerY = 0.0f;
+			playerVelocityY = 0.0f;
+		}
+		else if (playerY > SCREEN_HEIGHT - playerHeight)
+		{
+			playerY = SCREEN_HEIGHT - playerHeight;
+			playerVelocityY = 0.0f;
+		}
 	}
 
 	bool upPressed = false;
 	bool downPressed = false;
 	bool leftPressed = false;
 	bool rightPressed = false;
-	float x = 0.0f;
-	float y = 0.0f;
+	float playerX = 0.0f;
+	float playerY = 0.0f;
+	float playerVelocityX = 0.0f;
+	float playerVelocityY = 0.0f;
+	float playerMaxVelocity = 0.2f;
+	float playerWidth = 32.0f;
+	float playerHeight = 32.0f;
+	float friction = 1 / 3000.0f;
+	float gravity = 1 / 1000.0f;
 };
 
 
@@ -106,19 +153,23 @@ int main( int argc, char* args[] )
 			}
     }
 
-    if (now - lastSimulationTimeMs < GAME_FRAME_MS) {
+    if (now - lastSimulationTimeMs < UNIVERSE_TICK_MS) {
       SDL_WaitEventTimeout(NULL, now - lastSimulationTimeMs);
       continue;
     }
 
-    while (now - lastSimulationTimeMs >= GAME_FRAME_MS) {
-      lastSimulationTimeMs += GAME_FRAME_MS;
-			universe.update(GAME_FRAME_MS);
+    while (now - lastSimulationTimeMs >= UNIVERSE_TICK_MS) {
+      lastSimulationTimeMs += UNIVERSE_TICK_MS;
+			universe.update(UNIVERSE_TICK_MS);
     }
 
     glClear(GL_COLOR_BUFFER_BIT);
     glColor3f(1.0f, 1.0f, 1.0f);
-    glRectf(universe.x, universe.y, universe.x + 100.0f, universe.y + 100.0f);
+    glRectf(
+			universe.playerX,
+			universe.playerY,
+			universe.playerX + universe.playerWidth,
+			universe.playerY + universe.playerHeight);
 
     SDL_GL_SwapWindow(window.get());
   }

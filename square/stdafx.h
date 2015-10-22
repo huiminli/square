@@ -5,4 +5,5 @@
 
 #include <cstdio>
 
+#include <algorithm>
 #include <memory>
