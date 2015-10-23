@@ -33,6 +33,13 @@ struct SDL_GLContextDeleter {
   }
 };
 
+struct SDL_SurfaceDeleter {
+	void operator()(SDL_Surface *surface) const
+	{
+		SDL_FreeSurface(surface);
+	}
+};
+
 struct Universe {
 public:
 	void update(float dt) {
@@ -102,7 +109,7 @@ int main( int argc, char* args[] )
   SDL sdl;
   if(SDL_Init( SDL_INIT_VIDEO ) < 0)
   {
-      printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
+      printf("SDL_Init: %s\n", SDL_GetError());
       return 1;
   }
 
@@ -115,16 +122,39 @@ int main( int argc, char* args[] )
       SCREEN_WIDTH,
       SCREEN_HEIGHT,
       SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN));
-
   if(!window)
   {
-      printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
+      printf("SDL_CreateWindow: %s\n", SDL_GetError());
       return 1;
   }
 
-  std::unique_ptr<void, SDL_GLContextDeleter> glContext(SDL_GL_CreateContext(window.get()));
 
-  glOrtho(0.0, SCREEN_WIDTH, 0.0, SCREEN_HEIGHT, -1.0, 1.0);
+	std::unique_ptr<void, SDL_GLContextDeleter> glContext(SDL_GL_CreateContext(window.get()));
+	glEnable(GL_TEXTURE_2D);
+	glOrtho(0.0, SCREEN_WIDTH, 0.0, SCREEN_HEIGHT, -1.0, 1.0);
+
+	std::unique_ptr<SDL_Surface, SDL_SurfaceDeleter> tiles(SDL_LoadBMP("mario.bmp"));
+	if (!tiles) {
+		printf("SDL_LoadBMP: %s\n", SDL_GetError());
+		return 1;
+	}
+
+	GLuint texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D,
+		0,
+		tiles->format->BytesPerPixel,
+		tiles->w,
+		tiles->h,
+		0,
+		GL_BGR,
+		GL_UNSIGNED_BYTE,
+		tiles->pixels);
 
 	Universe universe;
   unsigned lastSimulationTimeMs = SDL_GetTicks();
@@ -169,13 +199,23 @@ int main( int argc, char* args[] )
     }
 
     glClear(GL_COLOR_BUFFER_BIT);
-    glColor3f(1.0f, 1.0f, 1.0f);
-    glRectf(
-			universe.playerX,
-			universe.playerY,
-			universe.playerX + universe.playerWidth,
-			universe.playerY + universe.playerHeight);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glBegin(GL_QUADS);
+				glTexCoord2f(.0625f * 12, .0625f * 4);
+				glVertex2f(universe.playerX, universe.playerY);
+
+				glTexCoord2f(.0625f * 13, .0625f * 4);
+				glVertex2f(universe.playerX + universe.playerWidth, universe.playerY);
+
+				glTexCoord2f(.0625f * 13, .0625f * 3);
+				glVertex2f(universe.playerX + universe.playerWidth, universe.playerY + universe.playerHeight);
+
+				glTexCoord2f(.0625f * 12, .0625f * 3);
+				glVertex2f(universe.playerX, universe.playerY + universe.playerHeight);
+		glEnd();
 
     SDL_GL_SwapWindow(window.get());
   }
+
+	glDeleteTextures(1, &texture);
 }
