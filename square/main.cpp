@@ -1,10 +1,15 @@
 #include "stdafx.h"
 
 namespace {
-  const int SCREEN_WIDTH = 800;
-  const int SCREEN_HEIGHT = 600;
-  const int UNIVERSE_TICK_MS = 10;
+  const unsigned SCREEN_WIDTH = 800;
+  const unsigned SCREEN_HEIGHT = 600;
+  const unsigned UNIVERSE_TICK_MS = 10;
 }
+
+using std::copysign;
+using std::fabs;
+using std::max;
+using std::min;
 
 struct SDL {
 public:
@@ -30,23 +35,20 @@ struct SDL_GLContextDeleter {
 
 struct Universe {
 public:
-	void update(long dt) {
+	void update(float dt) {
 		
 		// On the ground.
 		if (playerY < 0.001f) {
-			playerVelocityX += (rightPressed - leftPressed) / 90.0f;
-			playerVelocityY += (upPressed - downPressed) / 2.0f;
-			playerVelocityX = std::max(-playerMaxVelocity, std::min(playerMaxVelocity, playerVelocityX));
+			playerVelocityX += (rightPressed - leftPressed) * walkAcceleration * dt;
+			playerVelocityX = copysign(max(0.0f, fabs(playerVelocityX) - frictionAcceleration * dt), playerVelocityX);
+			playerVelocityX = max(-maxWalkVelocity, std::min(maxWalkVelocity, playerVelocityX));
 
-			if (playerVelocityX >= 0.0f) {
-				playerVelocityX = std::max(0.0f, playerVelocityX - friction * dt);
-			}
-			else {
-				playerVelocityX = std::min(0.0f, playerVelocityX + friction * dt);
+			if (upPressed) {
+				playerVelocityY = jumpVelocity;
 			}
 		}
 
-		playerVelocityY -= gravity * dt;
+		playerVelocityY -= gravityAcceleration * dt;
 
 		playerX += playerVelocityX * dt;
 		playerY += playerVelocityY * dt;
@@ -79,15 +81,19 @@ public:
 	bool downPressed = false;
 	bool leftPressed = false;
 	bool rightPressed = false;
+
 	float playerX = 0.0f;
 	float playerY = 0.0f;
 	float playerVelocityX = 0.0f;
 	float playerVelocityY = 0.0f;
-	float playerMaxVelocity = 0.2f;
-	float playerWidth = 32.0f;
-	float playerHeight = 32.0f;
-	float friction = 1 / 3000.0f;
-	float gravity = 1 / 1000.0f;
+
+	const float playerWidth = 32.0f;
+	const float playerHeight = 32.0f;
+	const float maxWalkVelocity = 200.0f;
+	const float frictionAcceleration = 1000.0f;
+	const float gravityAcceleration = 1000.0f;
+	const float walkAcceleration = 10000.0f;
+	const float jumpVelocity = 500.0f;
 };
 
 
@@ -119,7 +125,6 @@ int main( int argc, char* args[] )
   std::unique_ptr<void, SDL_GLContextDeleter> glContext(SDL_GL_CreateContext(window.get()));
 
   glOrtho(0.0, SCREEN_WIDTH, 0.0, SCREEN_HEIGHT, -1.0, 1.0);
-
 
 	Universe universe;
   unsigned lastSimulationTimeMs = SDL_GetTicks();
@@ -160,7 +165,7 @@ int main( int argc, char* args[] )
 
     while (now - lastSimulationTimeMs >= UNIVERSE_TICK_MS) {
       lastSimulationTimeMs += UNIVERSE_TICK_MS;
-			universe.update(UNIVERSE_TICK_MS);
+			universe.update(UNIVERSE_TICK_MS / 1000.0f);
     }
 
     glClear(GL_COLOR_BUFFER_BIT);
