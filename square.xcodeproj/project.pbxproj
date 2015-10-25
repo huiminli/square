@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		BB04438E1BD308E1008910EB /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB04438D1BD308E1008910EB /* SDL2.framework */; };
 		BB5F86391BD31CF400ACED8C /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BB5F86381BD31CF400ACED8C /* main.cpp */; settings = {ASSET_TAGS = (); }; };
+		BBC314821BDC3A36003EA665 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBC314811BDC3A36003EA665 /* OpenGL.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -27,6 +28,7 @@
 		BB0443831BD30881008910EB /* square */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = square; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB04438D1BD308E1008910EB /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
 		BB5F86381BD31CF400ACED8C /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		BBC314811BDC3A36003EA665 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -34,6 +36,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BBC314821BDC3A36003EA665 /* OpenGL.framework in Frameworks */,
 				BB04438E1BD308E1008910EB /* SDL2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -44,6 +47,7 @@
 		BB04437A1BD30881008910EB = {
 			isa = PBXGroup;
 			children = (
+				BBC314811BDC3A36003EA665 /* OpenGL.framework */,
 				BB04438D1BD308E1008910EB /* SDL2.framework */,
 				BB0443851BD30881008910EB /* square */,
 				BB0443841BD30881008910EB /* Products */,
