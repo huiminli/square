@@ -25,7 +25,6 @@ void Universe::update(float dt)
 	playerVelocityX += (rightPressed - leftPressed) * walkAcceleration * dt * (onGround ? 1.0f : 0.15f) ;
 	playerVelocityX = max(-maxWalkVelocity, std::min(maxWalkVelocity, playerVelocityX));
 
-	// On the ground.
 	if (onGround) {
 		playerVelocityX = copysign(max(0.0f, fabs(playerVelocityX) - frictionAcceleration * dt), playerVelocityX);
 

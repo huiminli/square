@@ -1,5 +1,3 @@
-include/
-lib/
 thirdparty/
 
 # Ignore all xcode proj files except the pbxproj one
@@ -21,7 +19,6 @@ square.xcodeproj/*
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
-x64/
 build/
 bld/
 [Bb]in/
