@@ -20,11 +20,14 @@ Universe::Universe() {
 
 void Universe::update(float dt)
 {
+	bool onGround = playerY < 0.001f;
+
+	playerVelocityX += (rightPressed - leftPressed) * walkAcceleration * dt * (onGround ? 1.0f : 0.15f) ;
+	playerVelocityX = max(-maxWalkVelocity, std::min(maxWalkVelocity, playerVelocityX));
+
 	// On the ground.
-	if (playerY < 0.001f) {
-		playerVelocityX += (rightPressed - leftPressed) * walkAcceleration * dt;
+	if (onGround) {
 		playerVelocityX = copysign(max(0.0f, fabs(playerVelocityX) - frictionAcceleration * dt), playerVelocityX);
-		playerVelocityX = max(-maxWalkVelocity, std::min(maxWalkVelocity, playerVelocityX));
 
 		if (upPressed) {
 			playerVelocityY = jumpVelocity;
