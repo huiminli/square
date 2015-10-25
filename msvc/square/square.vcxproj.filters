@@ -3,8 +3,18 @@
   <ItemGroup>
     <ClCompile Include="..\..\square\main.cpp" />
     <ClCompile Include="..\..\square\stdafx.cpp" />
+    <ClCompile Include="..\..\square\Renderer.cpp" />
+    <ClCompile Include="..\..\square\Universe.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\square\stdafx.h" />
+    <ClInclude Include="..\..\square\Renderer.h" />
+    <ClInclude Include="..\..\square\Universe.h" />
+    <ClInclude Include="..\..\square\SDL_Util.h" />
+    <ClInclude Include="..\..\square\GL_Util.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\square\vertex.glsl" />
+    <None Include="..\..\square\fragment.glsl" />
   </ItemGroup>
 </Project>

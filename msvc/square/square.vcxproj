@@ -20,13 +20,23 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\square\main.cpp" />
+    <ClCompile Include="..\..\square\Renderer.cpp" />
     <ClCompile Include="..\..\square\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\..\square\Universe.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\square\GL_Util.h" />
+    <ClInclude Include="..\..\square\Renderer.h" />
+    <ClInclude Include="..\..\square\SDL_Util.h" />
     <ClInclude Include="..\..\square\stdafx.h" />
+    <ClInclude Include="..\..\square\Universe.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\square\fragment.glsl" />
+    <None Include="..\..\square\vertex.glsl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{91F69CD6-6958-4031-9181-FF853DD765DE}</ProjectGuid>
@@ -101,7 +111,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;opengl32.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories>D:\Projekty\square\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
