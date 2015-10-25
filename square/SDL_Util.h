@@ -61,4 +61,4 @@ struct SDL_SurfaceDeleter {
 
 typedef std::unique_ptr<SDL_Surface, SDL_SurfaceDeleter> SDL_SurfacePtr;
 
-#endif SQUARE_SDL_UTIL_H
+#endif // SQUARE_SDL_UTIL_H

@@ -7,7 +7,6 @@ namespace {
 	const char *WINDOW_TITLE = "Game of Squares";
 	const unsigned SCREEN_WIDTH = 800;
 	const unsigned SCREEN_HEIGHT = 600;
-	const unsigned UNIVERSE_TICK_MS = 10;
 
 	const GLfloat SPRITE_1x1_DATA[] = {
 		 0.0f,   0.0f, 0.0f, 0.0f,
@@ -19,6 +18,11 @@ namespace {
 
 void Renderer::initialize()
 {
+  
+  SDL_Check(SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE));
+  SDL_Check(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4));
+  SDL_Check(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1));
+  
 	SDL_Check(window.reset(SDL_CreateWindow(
 		WINDOW_TITLE,
 		SDL_WINDOWPOS_UNDEFINED,
