@@ -3,20 +3,19 @@
 #define SQUARE_RENDEDRER_H
 
 #include "SDL_Util.h"
+#include "GL_Util.h"
 
 class Universe;
 
 class Renderer {
 public:
-	~Renderer();
-
 	void initialize();
 	void render(const Universe &universe);
 
 private:
 	void loadRamResources();
 	void loadGpuResources();
-	static GLuint compileShader(const std::string &vertexShader, std::string fragmentShader);
+	static GLProgram compileShader(const std::string &vertexShader, std::string fragmentShader);
 	static std::string loadFile(const char *file);
 
 private: // Device.
@@ -29,9 +28,9 @@ private: // RAM resources.
 	std::string fragmentShaderCode;
 
 private: // GPU resources.
-	GLuint tilesetTexture;
-	GLuint sprite1x1Mesh;
-	GLuint sprite1x1Shader;
+	GLTexture tilesetTexture;
+	GLBuffer sprite1x1Mesh;
+	GLProgram sprite1x1Shader;
 };
 
 #endif // SQUARE_RENDEDRER_H

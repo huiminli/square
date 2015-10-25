@@ -16,12 +16,6 @@ namespace {
 	};
 }
 
-Renderer::~Renderer() {
-	glDeleteTextures(1, &tilesetTexture);
-	glDeleteBuffers(1, &sprite1x1Mesh);
-	glDeleteProgram(sprite1x1Shader);
-}
-
 void Renderer::initialize()
 {
 	// Set GL attributes _before_ creating the window.
@@ -52,8 +46,8 @@ void Renderer::loadRamResources() {
 
 void Renderer::loadGpuResources() {
 	// TODO(adrw): Release.
-	glGenTextures(1, &tilesetTexture);
-	glBindTexture(GL_TEXTURE_2D, tilesetTexture);
+	glGenTextures(1, tilesetTexture.getIdPtr());
+	glBindTexture(GL_TEXTURE_2D, tilesetTexture.getId());
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -68,8 +62,8 @@ void Renderer::loadGpuResources() {
 		GL_UNSIGNED_BYTE,
 		tilesetBitmap->pixels);
 
-	glGenBuffers(1, &sprite1x1Mesh);
-	glBindBuffer(GL_ARRAY_BUFFER, sprite1x1Mesh);
+	glGenBuffers(1, sprite1x1Mesh.getIdPtr());
+	glBindBuffer(GL_ARRAY_BUFFER, sprite1x1Mesh.getId());
 	glBufferData(GL_ARRAY_BUFFER, sizeof(SPRITE_1x1_DATA), SPRITE_1x1_DATA, GL_STATIC_DRAW);
 
 	// TODO(adrw): Release.
@@ -81,11 +75,11 @@ void Renderer::render(const Universe & universe)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Draw the player sprite.
-	glUseProgram(sprite1x1Shader);
+	glUseProgram(sprite1x1Shader.getId());
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, tilesetTexture);
+	glBindTexture(GL_TEXTURE_2D, tilesetTexture.getId());
 	glUniform1i(0, 0);
-	glBindBuffer(GL_ARRAY_BUFFER, sprite1x1Mesh);
+	glBindBuffer(GL_ARRAY_BUFFER, sprite1x1Mesh.getId());
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (const GLvoid*)0);
@@ -98,7 +92,7 @@ void Renderer::render(const Universe & universe)
 	SDL_GL_SwapWindow(window.get());
 }
 
-GLuint Renderer::compileShader(const std::string &vertexShaderCode, std::string fragmentShaderCode)
+GLProgram Renderer::compileShader(const std::string &vertexShaderCode, std::string fragmentShaderCode)
 {
 	GLint result = GL_TRUE;
 	GLchar errorMessage[4096];
@@ -120,17 +114,18 @@ GLuint Renderer::compileShader(const std::string &vertexShaderCode, std::string 
 	glCompileShader(fragmentShader.getId());
 	glGetShaderiv(fragmentShader.getId(), GL_COMPILE_STATUS, &result);
 	if (result != GL_TRUE) {
+		glGetShaderInfoLog(fragmentShader.getId(), sizeof(errorMessage), NULL, errorMessage);
 		std::stringstream message; message << "GL error in 'glGetShaderiv': " << errorMessage;
 		throw std::runtime_error(message.str().c_str());
 	}
 
-	GLuint program = glCreateProgram();
-	glAttachShader(program, vertexShader.getId());
-	glAttachShader(program, fragmentShader.getId());
-	glLinkProgram(program);
-	glGetProgramiv(program, GL_LINK_STATUS, &result);
+	GLProgram program = glCreateProgram();
+	glAttachShader(program.getId(), vertexShader.getId());
+	glAttachShader(program.getId(), fragmentShader.getId());
+	glLinkProgram(program.getId());
+	glGetProgramiv(program.getId(), GL_LINK_STATUS, &result);
 	if (result != GL_TRUE) {
-		glGetProgramInfoLog(program, sizeof(errorMessage), NULL, errorMessage);
+		glGetProgramInfoLog(program.getId(), sizeof(errorMessage), NULL, errorMessage);
 		std::stringstream message; message << "GL error in 'glGetShaderiv': " << errorMessage;
 		throw std::runtime_error(message.str().c_str());
 	}
