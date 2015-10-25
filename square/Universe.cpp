@@ -13,9 +13,9 @@ namespace
 }
 
 Universe::Universe() {
-	sprites.push_front(RenderableSprite{0.0f, 0.0f, 32.0f, 32.0f, SpriteType::A});
-	sprites.push_front(RenderableSprite{32.0f, 32.0f, 64.0f, 64.0f, SpriteType::B });
-	sprites.push_front(RenderableSprite{96.0f, 96.0f, 128.0f, 128.0f, SpriteType::C });
+	sprites.push_back(RenderableSprite{0.0f, 0.0f, 32.0f, 32.0f, SpriteType::A});
+	sprites.push_back(RenderableSprite{32.0f, 32.0f, 64.0f, 64.0f, SpriteType::B });
+	sprites.push_back(RenderableSprite{96.0f, 96.0f, 128.0f, 128.0f, SpriteType::C });
 }
 
 void Universe::update(float dt)
@@ -58,4 +58,7 @@ void Universe::update(float dt)
 		playerY = UNIVERSE_HEIGHT - playerHeight;
 		playerVelocityY = 0.0f;
 	}
+
+	sprites.front().x = playerX;
+	sprites.front().y = playerY;
 }
