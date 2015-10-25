@@ -60,6 +60,14 @@ struct GLProgramDeleter {
 };
 typedef GLResource<GLProgramDeleter> GLProgram;
 
+struct GLSamplerDeleter {
+  void operator()(GLuint sampler) const
+  {
+    glDeleteSamplers(1, &sampler);
+  }
+};
+typedef GLResource<GLSamplerDeleter> GLSampler;
+
 struct GLTextureDeleter {
 	void operator()(GLuint texture) const
 	{
