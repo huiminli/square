@@ -2,9 +2,12 @@
 #ifndef SQUARE_UNIVERSE_H
 #define SQUARE_UNIVERSE_H
 
+#include <list>
+#include "RenderableSprite.h"
 
 class Universe {
 public:
+	Universe();
 	void update(float dt);
 
 	bool upPressed = false;
@@ -24,6 +27,8 @@ public:
 	const float gravityAcceleration = 1000.0f;
 	const float walkAcceleration = 10000.0f;
 	const float jumpVelocity = 500.0f;
+
+	std::list<RenderableSprite> sprites;
 };
 
 #endif // SQUARE_UNIVERSE_H

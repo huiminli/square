@@ -12,9 +12,14 @@ namespace
 	const float UNIVERSE_HEIGHT = 600;
 }
 
+Universe::Universe() {
+	sprites.push_front(RenderableSprite{0.0f, 0.0f, 32.0f, 32.0f, SpriteType::A});
+	sprites.push_front(RenderableSprite{32.0f, 32.0f, 64.0f, 64.0f, SpriteType::B });
+	sprites.push_front(RenderableSprite{96.0f, 96.0f, 128.0f, 128.0f, SpriteType::C });
+}
+
 void Universe::update(float dt)
 {
-
 	// On the ground.
 	if (playerY < 0.001f) {
 		playerVelocityX += (rightPressed - leftPressed) * walkAcceleration * dt;

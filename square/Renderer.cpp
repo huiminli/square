@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Renderer.h"
 #include "GL_Util.h"
+#include "Universe.h"
 
 namespace {
 	const char *WINDOW_TITLE = "Game of Squares";
@@ -9,18 +10,15 @@ namespace {
 	const unsigned UNIVERSE_TICK_MS = 10;
 
 	const GLfloat SPRITE_1x1_DATA[] = {
-		-1.0f, -1.0f, 1.0f, 0.0f, 0.0f,
-		-1.0f,  1.0f, 1.0f, 0.0f, 1.0f,
-		1.0f, -1.0f, 1.0f, 1.0f, 0.0f,
-		1.0f,  1.0f, 1.0f, 1.0f, 1.0f,
+		 0.0f,   0.0f, 0.0f, 0.0f,
+		 0.0f,  32.0f, 0.0f, 1.0f,
+		32.0f,   0.0f, 1.0f, 0.0f,
+		32.0f,  32.0f, 1.0f, 1.0f,
 	};
 }
 
 void Renderer::initialize()
 {
-	// Set GL attributes _before_ creating the window.
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-
 	SDL_Check(window.reset(SDL_CreateWindow(
 		WINDOW_TITLE,
 		SDL_WINDOWPOS_UNDEFINED,
@@ -32,6 +30,7 @@ void Renderer::initialize()
 	SDL_Check(context.reset(SDL_GL_CreateContext(window.get())));
 	GLEW_Check(glewInit());
 
+	SDL_GL_SetSwapInterval(1);
 	glEnable(GL_TEXTURE_2D);
 
 	loadRamResources();
@@ -45,7 +44,6 @@ void Renderer::loadRamResources() {
 }
 
 void Renderer::loadGpuResources() {
-	// TODO(adrw): Release.
 	glGenTextures(1, tilesetTexture.getIdPtr());
 	glBindTexture(GL_TEXTURE_2D, tilesetTexture.getId());
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -66,15 +64,13 @@ void Renderer::loadGpuResources() {
 	glBindBuffer(GL_ARRAY_BUFFER, sprite1x1Mesh.getId());
 	glBufferData(GL_ARRAY_BUFFER, sizeof(SPRITE_1x1_DATA), SPRITE_1x1_DATA, GL_STATIC_DRAW);
 
-	// TODO(adrw): Release.
 	sprite1x1Shader = compileShader(vertexShaderCode, fragmentShaderCode);
 }
 
-void Renderer::render(const Universe & universe)
+void Renderer::render(const Universe &universe)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// Draw the player sprite.
 	glUseProgram(sprite1x1Shader.getId());
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, tilesetTexture.getId());
@@ -82,12 +78,16 @@ void Renderer::render(const Universe & universe)
 	glBindBuffer(GL_ARRAY_BUFFER, sprite1x1Mesh.getId());
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (const GLvoid*)0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_TRUE, 5 * sizeof(GLfloat), (const GLvoid*)(3 * sizeof(GLfloat)));
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)0);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_TRUE, 4 * sizeof(GLfloat), (GLvoid*)(2 * sizeof(GLfloat)));
+	for (auto sprite : universe.sprites)
+	{
+		GLint worldPosition = glGetUniformLocation(sprite1x1Shader.getId(), "worldPosition");
+		glUniform2f(worldPosition, sprite.x, sprite.y);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	}
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
-
 
 	SDL_GL_SwapWindow(window.get());
 }

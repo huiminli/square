@@ -12,6 +12,7 @@
     <ClInclude Include="..\..\square\Universe.h" />
     <ClInclude Include="..\..\square\SDL_Util.h" />
     <ClInclude Include="..\..\square\GL_Util.h" />
+    <ClInclude Include="..\..\square\RenderableSprite.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\square\vertex.glsl" />

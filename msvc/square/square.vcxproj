@@ -29,6 +29,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\square\GL_Util.h" />
+    <ClInclude Include="..\..\square\RenderableSprite.h" />
     <ClInclude Include="..\..\square\Renderer.h" />
     <ClInclude Include="..\..\square\SDL_Util.h" />
     <ClInclude Include="..\..\square\stdafx.h" />
