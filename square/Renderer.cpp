@@ -8,12 +8,19 @@ namespace {
 	const unsigned SCREEN_WIDTH = 800;
 	const unsigned SCREEN_HEIGHT = 600;
 
-	const GLfloat SPRITE_1x1_DATA[] = {
-		 0.0f,   0.0f, 0.0f, 0.0f,
-		32.0f,   0.0f, 1.0f, 0.0f,
-    0.0f,  32.0f, 0.0f, 1.0f,
-		32.0f,  32.0f, 1.0f, 1.0f,
+	const GLfloat SPRITE_1x1_XY[] = {
+		 0.0f,  0.0f,
+		32.0f,  0.0f, 
+     0.0f, 32.0f,
+		32.0f, 32.0f,
 	};
+
+  const GLfloat SPRITE_1x1_UV[] = {
+    0.0f, .0625f,
+    .0625f, .0625f,
+    0.0f, 0.0f,
+    .0625f, 0.0f,
+  };
 }
 
 void Renderer::initialize()
@@ -36,7 +43,7 @@ void Renderer::initialize()
   glGetError(); // Discard GLEW errors.
 
 	SDL_GL_SetSwapInterval(1);
-  glEnable(GL_CULL_FACE);
+  glDisable(GL_CULL_FACE);
   glCullFace(GL_BACK);
 
 	loadRamResources();
@@ -69,13 +76,16 @@ void Renderer::loadGpuResources() {
   glGenVertexArrays(1, sprite1x1VA.getIdPtr());
   glBindVertexArray(sprite1x1VA.getId());
 
-  GL_CHECK(glGenBuffers(1, sprite1x1Mesh.getIdPtr()));
-  GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, sprite1x1Mesh.getId()));
-  GL_CHECK(glBufferData(GL_ARRAY_BUFFER, sizeof(SPRITE_1x1_DATA), SPRITE_1x1_DATA, GL_STATIC_DRAW));
-
-  GL_CHECK(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)0));
+  GLuint buffers[2];
+  GL_CHECK(glGenBuffers(2, buffers));
+  GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, buffers[0]));
+  GL_CHECK(glBufferData(GL_ARRAY_BUFFER, sizeof(SPRITE_1x1_XY), SPRITE_1x1_XY, GL_STATIC_DRAW));
+  GL_CHECK(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), NULL));
   GL_CHECK(glEnableVertexAttribArray(0));
-  GL_CHECK(glVertexAttribPointer(1, 2, GL_FLOAT, GL_TRUE, 4 * sizeof(GLfloat), (GLvoid*)(2 * sizeof(GLfloat))));
+
+  GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, buffers[1]));
+  GL_CHECK(glBufferData(GL_ARRAY_BUFFER, sizeof(SPRITE_1x1_UV), SPRITE_1x1_UV, GL_STATIC_DRAW));
+  GL_CHECK(glVertexAttribPointer(1, 2, GL_FLOAT, GL_TRUE, 2 * sizeof(GLfloat), NULL));
   GL_CHECK(glEnableVertexAttribArray(1));
 
 	sprite1x1Shader = compileShader(vertexShaderCode, fragmentShaderCode);
