@@ -31,6 +31,7 @@ private: // GPU resources.
 	GLTexture tilesetTexture;
 	GLBuffer sprite1x1Mesh;
 	GLProgram sprite1x1Shader;
+  GLSampler linearSampler;
 };
 
 #endif // SQUARE_RENDEDRER_H

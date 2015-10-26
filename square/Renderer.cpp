@@ -20,8 +20,8 @@ void Renderer::initialize()
 {
   
   SDL_Check(SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE));
-  SDL_Check(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4));
-  SDL_Check(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1));
+  SDL_Check(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3));
+  SDL_Check(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3));
   
 	SDL_Check(window.reset(SDL_CreateWindow(
 		WINDOW_TITLE,
@@ -50,10 +50,6 @@ void Renderer::loadRamResources() {
 void Renderer::loadGpuResources() {
 	glGenTextures(1, tilesetTexture.getIdPtr());
 	glBindTexture(GL_TEXTURE_2D, tilesetTexture.getId());
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D,
 		0,
 		tilesetBitmap->format->BytesPerPixel,
@@ -63,12 +59,26 @@ void Renderer::loadGpuResources() {
 		GL_BGR,
 		GL_UNSIGNED_BYTE,
 		tilesetBitmap->pixels);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glGenerateMipmap(GL_TEXTURE_2D);
+  glBindTexture(GL_TEXTURE_2D, 0);
 
 	glGenBuffers(1, sprite1x1Mesh.getIdPtr());
 	glBindBuffer(GL_ARRAY_BUFFER, sprite1x1Mesh.getId());
 	glBufferData(GL_ARRAY_BUFFER, sizeof(SPRITE_1x1_DATA), SPRITE_1x1_DATA, GL_STATIC_DRAW);
 
 	sprite1x1Shader = compileShader(vertexShaderCode, fragmentShaderCode);
+
+  glGenSamplers(1, linearSampler.getIdPtr());
+  glSamplerParameteri(linearSampler.getId(), GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glSamplerParameteri(linearSampler.getId(), GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glSamplerParameteri(linearSampler.getId(), GL_TEXTURE_WRAP_R, GL_REPEAT);
+  glSamplerParameteri(linearSampler.getId(), GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glSamplerParameteri(linearSampler.getId(), GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glSamplerParameteri(linearSampler.getId(), GL_TEXTURE_MAX_ANISOTROPY_EXT, 16);
 }
 
 void Renderer::render(const Universe &universe)
@@ -76,22 +86,30 @@ void Renderer::render(const Universe &universe)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glUseProgram(sprite1x1Shader.getId());
+
+  GLint texture2D = glGetUniformLocation(sprite1x1Shader.getId(), "texture2D");
+  GLint worldPosition = glGetUniformLocation(sprite1x1Shader.getId(), "worldPosition");
+
+  glUniform1i(texture2D, 0);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, tilesetTexture.getId());
-	glUniform1i(0, 0);
+  glBindSampler(0, linearSampler.getId());
+
 	glBindBuffer(GL_ARRAY_BUFFER, sprite1x1Mesh.getId());
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)0);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_TRUE, 4 * sizeof(GLfloat), (GLvoid*)(2 * sizeof(GLfloat)));
+
 	for (auto sprite : universe.sprites)
 	{
-		GLint worldPosition = glGetUniformLocation(sprite1x1Shader.getId(), "worldPosition");
 		glUniform2f(worldPosition, sprite.x, sprite.y);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	}
+
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
+  glBindTexture(GL_TEXTURE_2D, 0);
 
 	SDL_GL_SwapWindow(window.get());
 }
