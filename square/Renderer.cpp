@@ -56,11 +56,11 @@ void Renderer::loadGpuResources() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D,
 		0,
-		tilesetBitmap->format->BytesPerPixel,
+    GL_RGB8,
 		tilesetBitmap->w,
 		tilesetBitmap->h,
 		0,
-		GL_BGR,
+    GL_BGR,
 		GL_UNSIGNED_BYTE,
 		tilesetBitmap->pixels);
 
