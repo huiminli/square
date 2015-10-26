@@ -10,6 +10,7 @@
     GLenum error = glGetError(); \
     if (error != GL_NO_ERROR) { \
       SDL_Log("OpenGL error %d in %s", error, #statement); \
+      __debugbreak(); \
     } \
   }
 
@@ -19,14 +20,21 @@ struct GLResource {
 	GLResource(GLuint resource) : resource(resource) {}
 	GLResource(const GLResource&) = delete;
 	// TODO(adrw): Optimize double calls when returning value from a function.
-	GLResource(GLResource &&rhs) { *this = std::move(rhs); }
+	GLResource(GLResource &&rhs)
+  { 
+    move(std::move(rhs));
+  }
+
 	GLResource& operator=(GLResource &&rhs)
 	{
-		glDeleteProgram(resource);
-		resource = rhs.resource;
-		rhs.resource = 0;
+    reset();
+    move(std::move(rhs));
 		return *this;
 	};
+
+  ~GLResource() {
+    reset();
+  }
 
 	GLuint getId() const {
 		return resource;
@@ -36,12 +44,21 @@ struct GLResource {
 		return &resource;
 	}
 
-	~GLResource() {
-		Deleter d;
-		d(resource);
-	}
-
 private:
+  void move(GLResource &&rhs) {
+    resource = rhs.resource;
+    rhs.resource = 0;
+  }
+
+  void reset() {
+    if (resource != 0) {
+      Deleter d;
+      d(resource);
+    }
+
+    resource = 0;
+  }
+
 	GLuint resource;
 };
 
