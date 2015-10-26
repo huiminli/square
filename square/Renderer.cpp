@@ -64,9 +64,17 @@ void Renderer::loadGpuResources() {
 		GL_UNSIGNED_BYTE,
 		tilesetBitmap->pixels));
 
+  glGenVertexArrays(1, sprite1x1VA.getIdPtr());
+  glBindVertexArray(sprite1x1VA.getId());
+
   GL_CHECK(glGenBuffers(1, sprite1x1Mesh.getIdPtr()));
   GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, sprite1x1Mesh.getId()));
   GL_CHECK(glBufferData(GL_ARRAY_BUFFER, sizeof(SPRITE_1x1_DATA), SPRITE_1x1_DATA, GL_STATIC_DRAW));
+
+  GL_CHECK(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)0));
+  GL_CHECK(glEnableVertexAttribArray(0));
+  GL_CHECK(glVertexAttribPointer(1, 2, GL_FLOAT, GL_TRUE, 4 * sizeof(GLfloat), (GLvoid*)(2 * sizeof(GLfloat))));
+  GL_CHECK(glEnableVertexAttribArray(1));
 
 	sprite1x1Shader = compileShader(vertexShaderCode, fragmentShaderCode);
 }
@@ -76,25 +84,19 @@ void Renderer::render(const Universe &universe)
   GL_CHECK(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
   GL_CHECK(glUseProgram(sprite1x1Shader.getId()));
-
   GLint worldPosition = glGetUniformLocation(sprite1x1Shader.getId(), "worldPosition");
   GLint texture2D = glGetUniformLocation(sprite1x1Shader.getId(), "texture2D");
 
   GL_CHECK(glActiveTexture(GL_TEXTURE0));
   GL_CHECK(glBindTexture(GL_TEXTURE_2D, tilesetTexture.getId()));
   GL_CHECK(glUniform1i(texture2D, 0));
-  GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, sprite1x1Mesh.getId()));
-  GL_CHECK(glEnableVertexAttribArray(0));
-  GL_CHECK(glEnableVertexAttribArray(1));
-  GL_CHECK(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)0));
-  GL_CHECK(glVertexAttribPointer(1, 2, GL_FLOAT, GL_TRUE, 4 * sizeof(GLfloat), (GLvoid*)(2 * sizeof(GLfloat))));
+  GL_CHECK(glBindVertexArray(sprite1x1VA.getId()));
+
 	for (auto sprite : universe.sprites)
 	{
     GL_CHECK(glUniform2f(worldPosition, sprite.x, sprite.y));
     GL_CHECK(glDrawArrays(GL_TRIANGLE_STRIP, 0, 4));
 	}
-  GL_CHECK(glDisableVertexAttribArray(0));
-  GL_CHECK(glDisableVertexAttribArray(1));
 
   GLenum err;
   while ((err = glGetError()) != GL_NO_ERROR) {

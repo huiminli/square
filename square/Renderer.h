@@ -30,6 +30,7 @@ private: // RAM resources.
 private: // GPU resources.
 	GLTexture tilesetTexture;
 	GLBuffer sprite1x1Mesh;
+  GLVertexArray sprite1x1VA;
 	GLProgram sprite1x1Shader;
 };
 

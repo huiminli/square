@@ -77,4 +77,12 @@ struct GLTextureDeleter {
 };
 typedef GLResource<GLTextureDeleter> GLTexture;
 
+struct GLVertexArrayDeleter {
+  void operator()(GLuint vertexArray) const
+  {
+    GL_CHECK(glDeleteVertexArrays(1, &vertexArray));
+  }
+};
+typedef GLResource<GLVertexArrayDeleter> GLVertexArray;
+
 #endif // SQUARE_GL_UTIL_H
