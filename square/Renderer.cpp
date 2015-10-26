@@ -39,6 +39,7 @@ void Renderer::initialize()
 
 	SDL_Check(context.reset(SDL_GL_CreateContext(window.get())));
 
+  glewExperimental = GL_TRUE; // Fix the run-time error in Mac OS.
 	GLEW_Check(glewInit());
   glGetError(); // Discard GLEW errors.
 
