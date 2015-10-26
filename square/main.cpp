@@ -11,16 +11,8 @@ void mainLoop();
 
 int main( int argc, char* args[] )
 {
-	try
-	{
-		mainLoop();
-		return 0;
-	}
-	catch (std::exception &e)
-	{
-		SDL_Log("Top level exception: %s", e.what());
-		throw e;
-	}
+	mainLoop();
+	return 0;
 }
 
 void mainLoop() {
