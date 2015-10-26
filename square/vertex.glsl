@@ -2,8 +2,8 @@
 
 uniform vec2 worldPosition;
 
-in vec2 localPosition;
-in vec2 texCoord;
+layout(location = 0) in vec2 localPosition;
+layout(location = 1) in vec2 texCoord;
 
 out vec2 fragTexCoord;
 
