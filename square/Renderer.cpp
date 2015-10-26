@@ -10,8 +10,8 @@ namespace {
 
 	const GLfloat SPRITE_1x1_DATA[] = {
 		 0.0f,   0.0f, 0.0f, 0.0f,
-		 0.0f,  32.0f, 0.0f, 1.0f,
 		32.0f,   0.0f, 1.0f, 0.0f,
+    0.0f,  32.0f, 0.0f, 1.0f,
 		32.0f,  32.0f, 1.0f, 1.0f,
 	};
 }
@@ -36,6 +36,8 @@ void Renderer::initialize()
   glGetError(); // Discard GLEW errors.
 
 	SDL_GL_SetSwapInterval(1);
+  glEnable(GL_CULL_FACE);
+  glCullFace(GL_BACK);
 
 	loadRamResources();
 	loadGpuResources();
