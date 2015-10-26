@@ -93,6 +93,11 @@ void Renderer::render(const Universe &universe)
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 
+  GLenum err;
+  while ((err = glGetError()) != GL_NO_ERROR) {
+    SDL_Log("OpenGL error: %d", err);
+  }
+
 	SDL_GL_SwapWindow(window.get());
 }
 
