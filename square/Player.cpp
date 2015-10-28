@@ -11,8 +11,8 @@ using namespace UNIVERSE;
 
 Player::Player()
 {
-  sprites.push_back(RenderableSprite{ 0.0f, 0.0f, 0 });
-  sprites.push_back(RenderableSprite{ 0.0f, 32.0f, 1 });
+  sprites.push_back(RenderableSprite{ 0.0f, 0.0f, 6 });
+  sprites.push_back(RenderableSprite{ 0.0f, 32.0f, 5 });
 }
 
 std::vector<RenderableSprite> Player::getSprites() const
