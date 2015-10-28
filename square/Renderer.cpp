@@ -9,10 +9,10 @@ namespace {
 	const unsigned SCREEN_HEIGHT = 600;
 
 	const GLfloat SPRITE_1x1_DATA[] = {
-		 0.0f,  0.0f, 0.0f, .0625f,
-		 32.0f,  0.0f, .0625f, .0625f,
-     0.0f, 32.0f, 0.0f, 0.0f,
-		 32.0f, 32.0f, .0625f, 0.0f,
+		 0.0f,  0.0f,
+		 1.0f,  0.0f,
+     0.0f, 1.0f,
+		 1.0f, 1.0f,
 	};
 }
 
@@ -73,10 +73,8 @@ void Renderer::loadGpuResources() {
   glGenBuffers(1, sprite1x1Mesh.getIdPtr());
   glBindBuffer(GL_ARRAY_BUFFER, sprite1x1Mesh.getId());
   glBufferData(GL_ARRAY_BUFFER, sizeof(SPRITE_1x1_DATA), SPRITE_1x1_DATA, GL_STATIC_DRAW);
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), NULL);
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), NULL);
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_TRUE, 4 * sizeof(GLfloat), (GLfloat*) (2 * sizeof(GLfloat)));
-  glEnableVertexAttribArray(1);
 
 	sprite1x1Shader = compileShader(vertexShaderCode, fragmentShaderCode);
 }
@@ -87,7 +85,7 @@ void Renderer::render(const Universe &universe)
 
   glUseProgram(sprite1x1Shader.getId());
   GLint worldPosition = glGetUniformLocation(sprite1x1Shader.getId(), "worldPosition");
-	GLint tileTextureUV = glGetUniformLocation(sprite1x1Shader.getId(), "tileTextureUV");
+	GLint tileIndex = glGetUniformLocation(sprite1x1Shader.getId(), "tileIndex");
   GLint tileTexture = glGetUniformLocation(sprite1x1Shader.getId(), "tileTexture");
 
   glActiveTexture(GL_TEXTURE0);
@@ -98,10 +96,7 @@ void Renderer::render(const Universe &universe)
 	for (auto sprite : universe.getSprites())
 	{
     glUniform2f(worldPosition, sprite.x, sprite.y);
-		glUniform2f(
-			tileTextureUV,
-			1.0f / 16 * (sprite.spriteIndex % 16) ,
-			1.0f / 16 * (sprite.spriteIndex / 16));
+		glUniform1ui(tileIndex, sprite.spriteIndex);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	}
 
