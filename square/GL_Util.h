@@ -4,16 +4,6 @@
 
 #include <GL/glew.h>
 
-#define GL_CHECK(statement) \
-  statement; \
-  { \
-    GLenum error = glGetError(); \
-    if (error != GL_NO_ERROR) { \
-      SDL_Log("OpenGL error %d in %s", error, #statement); \
-      __debugbreak(); \
-    } \
-  }
-
 template<typename Deleter>
 struct GLResource {
 	GLResource() : resource(0) {}

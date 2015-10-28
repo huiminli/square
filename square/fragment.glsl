@@ -1,10 +1,10 @@
 #version 410 core
 
-uniform sampler2D texture2D;
-in vec2 fragTexCoord;
+uniform sampler2D tileTexture;
+in vec2 fTextureUV;
 
 out vec4 color;
  
 void main(){
-    color = texture(texture2D, fragTexCoord);
+    color = texture(tileTexture, fTextureUV);
 }

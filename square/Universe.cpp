@@ -14,7 +14,7 @@ namespace
 
 Universe::Universe() {
 	for (unsigned char i = 0; i < 128; ++i) {
-		sprites.push_back(RenderableSprite{32.0f * (i % 16), 32.0f * (1 + i/16) , i});
+		sprites.push_back(RenderableSprite{32.0f * (i % 16), 32.0f * (10 - i/16) , i});
 	}
 
 	sprites.push_back(RenderableSprite{ 0.0f, 0.0f, 0 });
@@ -23,6 +23,7 @@ Universe::Universe() {
 void Universe::update(float dt)
 {
 	bool onGround = playerY < 0.001f;
+
 
 	playerVelocityX += (rightPressed - leftPressed) * walkAcceleration * dt * (onGround ? 1.0f : 0.15f) ;
 	playerVelocityX = max(-maxWalkVelocity, std::min(maxWalkVelocity, playerVelocityX));

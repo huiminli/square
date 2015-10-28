@@ -51,13 +51,13 @@ void Renderer::loadRamResources() {
 }
 
 void Renderer::loadGpuResources() {
-	GL_CHECK(glGenTextures(1, tilesetTexture.getIdPtr()));
-  GL_CHECK(glBindTexture(GL_TEXTURE_2D, tilesetTexture.getId()));
-  GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
-  GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
-  GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
-  GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
-  GL_CHECK(glTexImage2D(GL_TEXTURE_2D,
+	glGenTextures(1, tilesetTexture.getIdPtr());
+  glBindTexture(GL_TEXTURE_2D, tilesetTexture.getId());
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexImage2D(GL_TEXTURE_2D,
 		0,
     GL_RGB8,
 		tilesetBitmap->w,
@@ -65,45 +65,44 @@ void Renderer::loadGpuResources() {
 		0,
     GL_BGR,
 		GL_UNSIGNED_BYTE,
-		tilesetBitmap->pixels));
+		tilesetBitmap->pixels);
 
   glGenVertexArrays(1, sprite1x1VA.getIdPtr());
   glBindVertexArray(sprite1x1VA.getId());
 
-  GL_CHECK(glGenBuffers(1, sprite1x1Mesh.getIdPtr()));
-  GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, sprite1x1Mesh.getId()));
-  GL_CHECK(glBufferData(GL_ARRAY_BUFFER, sizeof(SPRITE_1x1_DATA), SPRITE_1x1_DATA, GL_STATIC_DRAW));
-  GL_CHECK(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), NULL));
-  GL_CHECK(glEnableVertexAttribArray(0));
-  GL_CHECK(glVertexAttribPointer(1, 2, GL_FLOAT, GL_TRUE, 4 * sizeof(GLfloat), (GLfloat*) (2 * sizeof(GLfloat))));
-  GL_CHECK(glEnableVertexAttribArray(1));
+  glGenBuffers(1, sprite1x1Mesh.getIdPtr());
+  glBindBuffer(GL_ARRAY_BUFFER, sprite1x1Mesh.getId());
+  glBufferData(GL_ARRAY_BUFFER, sizeof(SPRITE_1x1_DATA), SPRITE_1x1_DATA, GL_STATIC_DRAW);
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), NULL);
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_TRUE, 4 * sizeof(GLfloat), (GLfloat*) (2 * sizeof(GLfloat)));
+  glEnableVertexAttribArray(1);
 
 	sprite1x1Shader = compileShader(vertexShaderCode, fragmentShaderCode);
 }
 
 void Renderer::render(const Universe &universe)
 {
-  GL_CHECK(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  GL_CHECK(glUseProgram(sprite1x1Shader.getId()));
+  glUseProgram(sprite1x1Shader.getId());
   GLint worldPosition = glGetUniformLocation(sprite1x1Shader.getId(), "worldPosition");
-	GLint worldTexCoord = glGetUniformLocation(sprite1x1Shader.getId(), "worldTexCoord");
+	GLint tileTextureUV = glGetUniformLocation(sprite1x1Shader.getId(), "tileTextureUV");
+  GLint tileTexture = glGetUniformLocation(sprite1x1Shader.getId(), "tileTexture");
 
-  GLint texture2D = glGetUniformLocation(sprite1x1Shader.getId(), "texture2D");
-
-  GL_CHECK(glActiveTexture(GL_TEXTURE0));
-  GL_CHECK(glBindTexture(GL_TEXTURE_2D, tilesetTexture.getId()));
-  GL_CHECK(glUniform1i(texture2D, 0));
-  GL_CHECK(glBindVertexArray(sprite1x1VA.getId()));
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, tilesetTexture.getId());
+  glUniform1i(tileTexture, 0);
+  glBindVertexArray(sprite1x1VA.getId());
 
 	for (auto sprite : universe.sprites)
 	{
-    GL_CHECK(glUniform2f(worldPosition, sprite.x, sprite.y));
+    glUniform2f(worldPosition, sprite.x, sprite.y);
 		glUniform2f(
-			worldTexCoord,
-			.0625f * (sprite.spriteIndex % (256/16)) ,
-			.0625f * (sprite.spriteIndex / (256/16)));
-    GL_CHECK(glDrawArrays(GL_TRIANGLE_STRIP, 0, 4));
+			tileTextureUV,
+			1.0f / 16 * (sprite.spriteIndex % 16) ,
+			1.0f / 16 * (sprite.spriteIndex / 16));
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	}
 
   GLenum err;
@@ -119,33 +118,33 @@ GLProgram Renderer::compileShader(const std::string &vertexShaderCode, std::stri
 	GLint result = GL_TRUE;
 	GLchar errorMessage[4096];
 
-  GL_CHECK(GLShader vertexShader(glCreateShader(GL_VERTEX_SHADER)));
+  GLShader vertexShader(glCreateShader(GL_VERTEX_SHADER));
 	char const *vertexShaderCodePtr = vertexShaderCode.c_str();
-  GL_CHECK(glShaderSource(vertexShader.getId(), 1, &vertexShaderCodePtr, NULL));
-  GL_CHECK(glCompileShader(vertexShader.getId()));
-  GL_CHECK(glGetShaderiv(vertexShader.getId(), GL_COMPILE_STATUS, &result));
+  glShaderSource(vertexShader.getId(), 1, &vertexShaderCodePtr, NULL);
+  glCompileShader(vertexShader.getId());
+  glGetShaderiv(vertexShader.getId(), GL_COMPILE_STATUS, &result);
 	if (result != GL_TRUE) {
 		glGetShaderInfoLog(vertexShader.getId(), sizeof(errorMessage), NULL, errorMessage);
 		std::stringstream message; message << "GL error in 'glGetShaderiv': " << errorMessage;
 		throw std::runtime_error(message.str().c_str());
 	}
 
-  GL_CHECK(GLShader fragmentShader = glCreateShader(GL_FRAGMENT_SHADER));
+  GLShader fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	char const * fragmentShaderCodePtr = fragmentShaderCode.c_str();
-  GL_CHECK(glShaderSource(fragmentShader.getId(), 1, &fragmentShaderCodePtr, NULL));
-  GL_CHECK(glCompileShader(fragmentShader.getId()));
-  GL_CHECK(glGetShaderiv(fragmentShader.getId(), GL_COMPILE_STATUS, &result));
+  glShaderSource(fragmentShader.getId(), 1, &fragmentShaderCodePtr, NULL);
+  glCompileShader(fragmentShader.getId());
+  glGetShaderiv(fragmentShader.getId(), GL_COMPILE_STATUS, &result);
 	if (result != GL_TRUE) {
 		glGetShaderInfoLog(fragmentShader.getId(), sizeof(errorMessage), NULL, errorMessage);
 		std::stringstream message; message << "GL error in 'glGetShaderiv': " << errorMessage;
 		throw std::runtime_error(message.str().c_str());
 	}
 
-  GL_CHECK(GLProgram program = glCreateProgram());
-  GL_CHECK(glAttachShader(program.getId(), vertexShader.getId()));
-  GL_CHECK(glAttachShader(program.getId(), fragmentShader.getId()));
-  GL_CHECK(glLinkProgram(program.getId()));
-  GL_CHECK(glGetProgramiv(program.getId(), GL_LINK_STATUS, &result));
+  GLProgram program = glCreateProgram();
+  glAttachShader(program.getId(), vertexShader.getId());
+  glAttachShader(program.getId(), fragmentShader.getId());
+  glLinkProgram(program.getId());
+  glGetProgramiv(program.getId(), GL_LINK_STATUS, &result);
 	if (result != GL_TRUE) {
 		glGetProgramInfoLog(program.getId(), sizeof(errorMessage), NULL, errorMessage);
 		std::stringstream message; message << "GL error in 'glGetShaderiv': " << errorMessage;
