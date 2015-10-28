@@ -65,7 +65,7 @@ private:
 struct GLBufferDeleter {
 	void operator()(GLuint buffer) const
 	{
-    GL_CHECK(glDeleteBuffers(1, &buffer));
+    glDeleteBuffers(1, &buffer);
 	}
 };
 typedef GLResource<GLBufferDeleter> GLBuffer;
@@ -73,7 +73,7 @@ typedef GLResource<GLBufferDeleter> GLBuffer;
 struct GLShaderDeleter {
 	void operator()(GLuint shader) const 
 	{
-    GL_CHECK(glDeleteShader(shader));
+    glDeleteShader(shader);
 	}
 };
 typedef GLResource<GLShaderDeleter> GLShader;
@@ -81,7 +81,7 @@ typedef GLResource<GLShaderDeleter> GLShader;
 struct GLProgramDeleter {
 	void operator()(GLuint progam) const
 	{
-    GL_CHECK(glDeleteProgram(progam));
+    glDeleteProgram(progam);
 	}
 };
 typedef GLResource<GLProgramDeleter> GLProgram;
@@ -89,7 +89,7 @@ typedef GLResource<GLProgramDeleter> GLProgram;
 struct GLTextureDeleter {
 	void operator()(GLuint texture) const
 	{
-    GL_CHECK(glDeleteTextures(1, &texture));
+    glDeleteTextures(1, &texture);
 	}
 };
 typedef GLResource<GLTextureDeleter> GLTexture;
@@ -97,7 +97,7 @@ typedef GLResource<GLTextureDeleter> GLTexture;
 struct GLVertexArrayDeleter {
   void operator()(GLuint vertexArray) const
   {
-    GL_CHECK(glDeleteVertexArrays(1, &vertexArray));
+    glDeleteVertexArrays(1, &vertexArray);
   }
 };
 typedef GLResource<GLVertexArrayDeleter> GLVertexArray;

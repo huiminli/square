@@ -2,15 +2,10 @@
 #ifndef SQUARE_RENDERABLE_SPRITE_H
 #define SQUARE_RENDERABLE_SPRITE_H
 
-enum class SpriteType : unsigned char {
-	A,
-	B,
-	C
-};
 
 struct RenderableSprite {
-	float x, y, w, h;
-	SpriteType type;
+	float x, y;
+	unsigned char spriteIndex;
 };
 
 #endif // SQUARE_RENDERABLE_SPRITE_H

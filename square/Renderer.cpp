@@ -10,9 +10,9 @@ namespace {
 
 	const GLfloat SPRITE_1x1_DATA[] = {
 		 0.0f,  0.0f, 0.0f, .0625f,
-		32.0f,  0.0f, .0625f, .0625f,
+		 32.0f,  0.0f, .0625f, .0625f,
      0.0f, 32.0f, 0.0f, 0.0f,
-		32.0f, 32.0f, .0625f, 0.0f,
+		 32.0f, 32.0f, .0625f, 0.0f,
 	};
 }
 
@@ -87,6 +87,8 @@ void Renderer::render(const Universe &universe)
 
   GL_CHECK(glUseProgram(sprite1x1Shader.getId()));
   GLint worldPosition = glGetUniformLocation(sprite1x1Shader.getId(), "worldPosition");
+	GLint worldTexCoord = glGetUniformLocation(sprite1x1Shader.getId(), "worldTexCoord");
+
   GLint texture2D = glGetUniformLocation(sprite1x1Shader.getId(), "texture2D");
 
   GL_CHECK(glActiveTexture(GL_TEXTURE0));
@@ -97,6 +99,10 @@ void Renderer::render(const Universe &universe)
 	for (auto sprite : universe.sprites)
 	{
     GL_CHECK(glUniform2f(worldPosition, sprite.x, sprite.y));
+		glUniform2f(
+			worldTexCoord,
+			.0625f * (sprite.spriteIndex % (256/16)) ,
+			.0625f * (sprite.spriteIndex / (256/16)));
     GL_CHECK(glDrawArrays(GL_TRIANGLE_STRIP, 0, 4));
 	}
 

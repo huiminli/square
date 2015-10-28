@@ -13,9 +13,11 @@ namespace
 }
 
 Universe::Universe() {
-	sprites.push_back(RenderableSprite{0.0f, 0.0f, 32.0f, 32.0f, SpriteType::A});
-	sprites.push_back(RenderableSprite{32.0f, 32.0f, 64.0f, 64.0f, SpriteType::B });
-	sprites.push_back(RenderableSprite{96.0f, 96.0f, 128.0f, 128.0f, SpriteType::C });
+	for (unsigned char i = 0; i < 128; ++i) {
+		sprites.push_back(RenderableSprite{32.0f * (i % 16), 32.0f * (1 + i/16) , i});
+	}
+
+	sprites.push_back(RenderableSprite{ 0.0f, 0.0f, 0 });
 }
 
 void Universe::update(float dt)
@@ -61,6 +63,6 @@ void Universe::update(float dt)
 		playerVelocityY = 0.0f;
 	}
 
-	sprites.front().x = playerX;
-	sprites.front().y = playerY;
+	sprites.back().x = playerX;
+	sprites.back().y = playerY;
 }
