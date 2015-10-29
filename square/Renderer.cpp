@@ -86,8 +86,26 @@ void Renderer::render(const Universe &universe)
 
   glUseProgram(sprite1x1Shader.getId());
   GLint worldPosition = glGetUniformLocation(sprite1x1Shader.getId(), "worldPosition");
+	GLint worldToScreenId = glGetUniformLocation(sprite1x1Shader.getId(), "worldToScreen");
 	GLint tileIndex = glGetUniformLocation(sprite1x1Shader.getId(), "tileIndex");
   GLint tileTexture = glGetUniformLocation(sprite1x1Shader.getId(), "tileTexture");
+
+
+	glm::mat4 cameraMatrix = glm::mat4(
+			1.0f, 0.0f, 0.0f, -universe.mPlayer.playerX / 2,
+			0.0f, 1.0f, 0.0f, -universe.mPlayer.playerY / 2,
+			0.0f, 0.0f, 1.0f, 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f);
+
+	glm::mat4 projectionMatrix = glm::mat4(
+			2.0f / SCREEN_WIDTH, 0.0f, 0.0f, -1.0f,
+			0.0f, 2.0f / SCREEN_HEIGHT, 0.0f, -1.0f,
+			0.0f, 0.0f, 1.0f, 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f);
+
+	glm::mat4 worldToScreen = cameraMatrix * projectionMatrix;
+
+	glUniformMatrix4fv(worldToScreenId, 1, false, &worldToScreen[0][0]);
 
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, tilesetTexture.getId());
@@ -97,7 +115,7 @@ void Renderer::render(const Universe &universe)
 	for (auto sprite : universe.getSprites())
 	{
     glUniform2f(worldPosition, sprite.x, sprite.y);
-		glUniform1ui(tileIndex, sprite.spriteIndex);
+		glUniform1ui(tileIndex, sprite.tileIndex);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	}
 

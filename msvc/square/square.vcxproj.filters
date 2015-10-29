@@ -5,6 +5,7 @@
     <ClCompile Include="..\..\square\stdafx.cpp" />
     <ClCompile Include="..\..\square\Renderer.cpp" />
     <ClCompile Include="..\..\square\Universe.cpp" />
+    <ClCompile Include="..\..\square\Player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\square\stdafx.h" />
@@ -13,6 +14,7 @@
     <ClInclude Include="..\..\square\SDL_Util.h" />
     <ClInclude Include="..\..\square\GL_Util.h" />
     <ClInclude Include="..\..\square\RenderableSprite.h" />
+    <ClInclude Include="..\..\square\Player.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\square\vertex.glsl" />

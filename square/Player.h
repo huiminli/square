@@ -11,7 +11,7 @@ public:
   void update(bool left, bool right, bool up, bool down, float dt);
   std::vector<RenderableSprite> getSprites() const;
 
-private:
+public:
   float playerX = 0.0f;
   float playerY = 0.0f;
   float playerVelocityX = 0.0f;

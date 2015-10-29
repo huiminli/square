@@ -11,10 +11,16 @@ Universe::Universe() {}
 std::list<RenderableSprite> Universe::getSprites() const
 {
   std::list<RenderableSprite> sprites;
+
+	for (unsigned char i = 0; i < 128; ++i) {
+		sprites.push_back(RenderableSprite{ 32.0f * (i % 16), 32.0f * (10 - i / 16) , i / 16 });
+	}
+
   for (auto sprite : mPlayer.getSprites())
   {
-    sprites.push_back(RenderableSprite{ sprite.x, sprite.y, sprite.spriteIndex });
+    sprites.push_back(sprite);
   }
+
   return sprites;
 }
 

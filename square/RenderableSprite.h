@@ -5,7 +5,7 @@
 
 struct RenderableSprite {
 	float x, y;
-	unsigned char spriteIndex;
+	int tileIndex;
 };
 
 #endif // SQUARE_RENDERABLE_SPRITE_H

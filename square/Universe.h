@@ -25,7 +25,7 @@ public:
 	bool leftPressed = false;
 	bool rightPressed = false;
 
-private:
+public:
   Player mPlayer;
 };
 
