@@ -94,7 +94,7 @@ void Renderer::render(const Universe &universe)
   glUniform1i(tileTexture, 0);
   glBindVertexArray(sprite1x1VA.getId());
 
-	for (auto sprite : universe.sprites)
+	for (auto sprite : universe.getSprites())
 	{
     glUniform2f(worldPosition, sprite.x, sprite.y);
 		glUniform1ui(tileIndex, sprite.spriteIndex);
