@@ -9,8 +9,8 @@ namespace {
 	const unsigned SCREEN_HEIGHT = 600;
 
 	const GLfloat SPRITE_1x1_DATA[] = {
-		 0.0f,  0.0f,
-		 1.0f,  0.0f,
+		 0.0f, 0.0f,
+		 1.0f, 0.0f,
      0.0f, 1.0f,
 		 1.0f, 1.0f,
 	};
@@ -32,6 +32,7 @@ void Renderer::initialize()
 
 	SDL_Check(context.reset(SDL_GL_CreateContext(window.get())));
 
+	// TODO(adrw): Do not include GLEW on platforms different that Windows.
   glewExperimental = GL_TRUE; // Fix the run-time error in Mac OS.
 	GLEW_Check(glewInit());
   glGetError(); // Discard GLEW errors.
