@@ -13,11 +13,17 @@ public:
 	void update(float dt);
 	void addEntity(std::unique_ptr<Entity> entity);
 
-  std::list<std::weak_ptr<RenderableSprite>> getSprites() const;
+	Camera* getCamera() override { return &camera; }
+	const Camera* getCamera() const { return &camera; }
+  std::list<std::weak_ptr<RenderableSprite>> getRenderableSprites() const;
 	std::shared_ptr<RenderableSprite> newRenderableSprite() override;
 
 private:
+	// Gameplay.
 	std::list<std::unique_ptr<Entity>> entities;
+
+	// Rendering.
+	Camera camera;
 	std::list<std::weak_ptr<RenderableSprite>> sprites;
 };
 

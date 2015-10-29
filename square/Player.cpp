@@ -17,10 +17,10 @@ Block::Block(EntityFactory & ef, float x, float y, unsigned tile)
 
 Player::Player(EntityFactory &ef)
 {
+	camera = ef.getCamera();
+
 	sprite = ef.newRenderableSprite();
 	sprite->tileIndex = 6;
-
-
 }
 
 // TODO: put the pressed control into a struct
@@ -56,4 +56,11 @@ void Player::update(float dt)
 
 	sprite->x = x;
 	sprite->y = y;
+
+	bool wPressed = SDL_GetKeyboardState(nullptr)[SDL_SCANCODE_W] != 0;
+	bool sPressed = SDL_GetKeyboardState(nullptr)[SDL_SCANCODE_S] != 0;
+	bool aPressed = SDL_GetKeyboardState(nullptr)[SDL_SCANCODE_A] != 0;
+	bool dPressed = SDL_GetKeyboardState(nullptr)[SDL_SCANCODE_D] != 0;
+	camera->x += (dPressed - aPressed) * cameraVelocity * dt;
+	camera->y += (wPressed - sPressed) * cameraVelocity * dt;
 }

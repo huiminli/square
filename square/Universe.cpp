@@ -20,11 +20,12 @@ void Universe::addEntity(std::unique_ptr<Entity> entity) {
 
 std::shared_ptr<RenderableSprite> Universe::newRenderableSprite() {
 	auto result = std::make_shared<RenderableSprite>();
+	// TODO(adrw): Remove unused weak_ptrs from here.
 	sprites.push_back(result);
 	return result;
 }
 
-std::list<std::weak_ptr<RenderableSprite>> Universe::getSprites() const
+std::list<std::weak_ptr<RenderableSprite>> Universe::getRenderableSprites() const
 {
 	return sprites;
 }

@@ -4,6 +4,7 @@
 
 #include "Entity.h"
 
+class Camera;
 class EntityFactory;
 class RenderableSprite;
 
@@ -21,7 +22,7 @@ public:
   Player(EntityFactory &ef);
   void update(float dt) override;
 
-public:
+private:
   float x = 0.0f;
   float y = 0.0f;
   float velocityX = 0.0f;
@@ -32,7 +33,9 @@ public:
   const float gravityAcceleration = 1000.0f;
   const float walkAcceleration = 10000.0f;
   const float jumpVelocity = 500.0f;
+	const float cameraVelocity = 100.0f;
   
+	Camera *camera;
   std::shared_ptr<RenderableSprite> sprite;
 };
 
