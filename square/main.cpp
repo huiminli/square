@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "Renderer.h"
 #include "SDL_Util.h"
+#include "Player.h"
+#include "Renderer.h"
 #include "Universe.h"
 
 namespace {
@@ -23,6 +24,8 @@ void mainLoop() {
 	renderer.initialize();
 
 	Universe universe;
+	universe.mPlayer = std::make_unique<Player>(universe);
+
 	unsigned lastSimulationTimeMs = SDL_GetTicks();
 	while (true) {
 		unsigned now = SDL_GetTicks();

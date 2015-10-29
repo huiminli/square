@@ -90,10 +90,9 @@ void Renderer::render(const Universe &universe)
 	GLint tileIndex = glGetUniformLocation(sprite1x1Shader.getId(), "tileIndex");
   GLint tileTexture = glGetUniformLocation(sprite1x1Shader.getId(), "tileTexture");
 
-
 	glm::mat4 cameraMatrix = glm::mat4(
-			1.0f, 0.0f, 0.0f, -universe.mPlayer.playerX / 2,
-			0.0f, 1.0f, 0.0f, -universe.mPlayer.playerY / 2,
+			1.0f, 0.0f, 0.0f, -universe.mPlayer->x / 2,
+			0.0f, 1.0f, 0.0f, -universe.mPlayer->y / 2,
 			0.0f, 0.0f, 1.0f, 0.0f,
 			0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -112,11 +111,13 @@ void Renderer::render(const Universe &universe)
   glUniform1i(tileTexture, 0);
   glBindVertexArray(sprite1x1VA.getId());
 
-	for (auto sprite : universe.getSprites())
+	for (auto sprite_weak : universe.getSprites())
 	{
-    glUniform2f(worldPosition, sprite.x, sprite.y);
-		glUniform1ui(tileIndex, sprite.tileIndex);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		if (auto sprite = sprite_weak.lock()) {
+			glUniform2f(worldPosition, sprite->x, sprite->y);
+			glUniform1ui(tileIndex, sprite->tileIndex);
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		}
 	}
 
   GLenum err;

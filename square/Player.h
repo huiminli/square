@@ -1,31 +1,28 @@
 #pragma once
-#ifndef PLAYER_H
-#define PLAYER_H
+#ifndef SQUARE_PLAYER_H
+#define SQUARE_PLAYER_H
 
-#include <vector>
-#include "RenderableSprite.h"
+class EntityFactory;
+class RenderableSprite;
 
 class Player {
 public:
-  Player();
+  Player(EntityFactory &ef);
   void update(bool left, bool right, bool up, bool down, float dt);
-  std::vector<RenderableSprite> getSprites() const;
 
 public:
-  float playerX = 0.0f;
-  float playerY = 0.0f;
-  float playerVelocityX = 0.0f;
-  float playerVelocityY = 0.0f;
+  float x = 0.0f;
+  float y = 0.0f;
+  float velocityX = 0.0f;
+  float velocityY = 0.0f;
   
-  const float playerWidth = 32.0f;
-  const float playerHeight = 32.0f;
   const float maxWalkVelocity = 200.0f;
   const float frictionAcceleration = 1000.0f;
   const float gravityAcceleration = 1000.0f;
   const float walkAcceleration = 10000.0f;
   const float jumpVelocity = 500.0f;
   
-  std::vector<RenderableSprite> sprites;
+  std::shared_ptr<RenderableSprite> sprite;
 };
 
-#endif // PLAYER_H
+#endif // SQUARE_PLAYER_H

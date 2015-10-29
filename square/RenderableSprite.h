@@ -2,8 +2,8 @@
 #ifndef SQUARE_RENDERABLE_SPRITE_H
 #define SQUARE_RENDERABLE_SPRITE_H
 
-
-struct RenderableSprite {
+class RenderableSprite {
+public:
 	float x, y;
 	int tileIndex;
 };

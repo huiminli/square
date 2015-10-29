@@ -15,6 +15,7 @@
     <ClInclude Include="..\..\square\GL_Util.h" />
     <ClInclude Include="..\..\square\RenderableSprite.h" />
     <ClInclude Include="..\..\square\Player.h" />
+    <ClInclude Include="..\..\square\EntityFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\square\vertex.glsl" />
