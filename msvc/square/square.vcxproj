@@ -29,6 +29,7 @@
     <ClCompile Include="..\..\square\Universe.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\square\Entity.h" />
     <ClInclude Include="..\..\square\EntityFactory.h" />
     <ClInclude Include="..\..\square\GL_Util.h" />
     <ClInclude Include="..\..\square\Player.h" />

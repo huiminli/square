@@ -24,7 +24,12 @@ void mainLoop() {
 	renderer.initialize();
 
 	Universe universe;
-	universe.mPlayer = std::make_unique<Player>(universe);
+
+	for (unsigned char i = 0; i < 128; ++i) {
+		universe.addEntity(std::make_unique<Block>(universe, 32.0f * (i % 16), 32.0f * (10 - i / 16), i / 16));
+	}
+
+	universe.addEntity(std::make_unique<Player>(universe));
 
 	unsigned lastSimulationTimeMs = SDL_GetTicks();
 	while (true) {
@@ -36,24 +41,6 @@ void mainLoop() {
 			if (e.type == SDL_QUIT)
 			{
 				return;
-			}
-			else if (e.type == SDL_KEYDOWN)
-			{
-				switch (e.key.keysym.sym) {
-				case SDLK_UP: universe.upPressed = true; break;
-				case SDLK_DOWN: universe.downPressed = true; break;
-				case SDLK_LEFT: universe.leftPressed = true; break;
-				case SDLK_RIGHT: universe.rightPressed = true; break;
-				}
-			}
-			else if (e.type == SDL_KEYUP)
-			{
-				switch (e.key.keysym.sym) {
-				case SDLK_UP: universe.upPressed = false; break;
-				case SDLK_DOWN: universe.downPressed = false; break;
-				case SDLK_LEFT: universe.leftPressed = false; break;
-				case SDLK_RIGHT: universe.rightPressed = false; break;
-				}
 			}
 		}
 

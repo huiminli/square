@@ -2,13 +2,24 @@
 #ifndef SQUARE_PLAYER_H
 #define SQUARE_PLAYER_H
 
+#include "Entity.h"
+
 class EntityFactory;
 class RenderableSprite;
 
-class Player {
+class Block : public Entity {
+public:
+	Block(EntityFactory &ef, float x, float y, unsigned tile);
+	void update(float dt) override {}
+
+private:
+	std::shared_ptr<RenderableSprite> sprite;
+};
+
+class Player : public Entity {
 public:
   Player(EntityFactory &ef);
-  void update(bool left, bool right, bool up, bool down, float dt);
+  void update(float dt) override;
 
 public:
   float x = 0.0f;
