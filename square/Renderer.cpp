@@ -7,12 +7,33 @@ namespace {
 	const char *WINDOW_TITLE = "Game of Squares";
 	const unsigned SCREEN_WIDTH = 800;
 	const unsigned SCREEN_HEIGHT = 600;
+	const float TILE_SIZE = 32.0f;
 
 	const GLfloat SPRITE_1x1_DATA[] = {
 		 0.0f, 0.0f,
 		 1.0f, 0.0f,
      0.0f, 1.0f,
 		 1.0f, 1.0f,
+	};
+
+	const unsigned BACKGROUND_SIZE = 16;
+	const unsigned char BACKGROUND_TILES[BACKGROUND_SIZE * BACKGROUND_SIZE] = {
+		108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108,
+		108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108,
+		108, 108, 108, 108, 108, 108, 108, 108, 108, 112, 113, 114, 108, 108, 108, 108,
+		108, 108, 108, 108, 108, 108, 108, 108, 108, 128, 129, 130, 108, 108, 108, 108,
+		108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108,
+		108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108,
+		108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108,
+		108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108,
+		108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108,
+		108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108,
+		108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108,
+		108, 108,   1, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108,
+		108,  16,  17,  18, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108,
+		 16,  17,  19,  17,  18, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108,
+		0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+		0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
 	};
 }
 
@@ -41,84 +62,81 @@ void Renderer::initialize()
   glDisable(GL_CULL_FACE);
   glCullFace(GL_BACK);
 
-	loadRamResources();
-	loadGpuResources();
+	loadResources();
 }
 
-void Renderer::loadRamResources() {
+void Renderer::loadResources() {
+	SDL_SurfacePtr tilesetBitmap;
 	SDL_Check(tilesetBitmap.reset(SDL_LoadBMP("mario.bmp")));
-	vertexShaderCode = loadFile("vertex.glsl");
-	fragmentShaderCode = loadFile("fragment.glsl");
-}
 
-void Renderer::loadGpuResources() {
 	glGenTextures(1, tilesetTexture.getIdPtr());
   glBindTexture(GL_TEXTURE_2D, tilesetTexture.getId());
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexImage2D(GL_TEXTURE_2D,
-		0,
-    GL_RGB8,
-		tilesetBitmap->w,
-		tilesetBitmap->h,
-		0,
-    GL_BGR,
-		GL_UNSIGNED_BYTE,
-		tilesetBitmap->pixels);
+  glTexImage2D(
+			GL_TEXTURE_2D,
+			0,
+			GL_RGB8,
+			tilesetBitmap->w,
+			tilesetBitmap->h,
+			0,
+			GL_BGR,
+			GL_UNSIGNED_BYTE,
+			tilesetBitmap->pixels);
 
-  glGenVertexArrays(1, sprite1x1VA.getIdPtr());
-  glBindVertexArray(sprite1x1VA.getId());
+  glGenVertexArrays(1, quadVA.getIdPtr());
+  glBindVertexArray(quadVA.getId());
 
-  glGenBuffers(1, sprite1x1Mesh.getIdPtr());
-  glBindBuffer(GL_ARRAY_BUFFER, sprite1x1Mesh.getId());
+  glGenBuffers(1, quadBuffer.getIdPtr());
+  glBindBuffer(GL_ARRAY_BUFFER, quadBuffer.getId());
   glBufferData(GL_ARRAY_BUFFER, sizeof(SPRITE_1x1_DATA), SPRITE_1x1_DATA, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), NULL);
-  glEnableVertexAttribArray(0);
 
-	sprite1x1Shader = compileShader(vertexShaderCode, fragmentShaderCode);
+	spriteShader = compileShader("sprite.vert", "sprite.frag");
+
+	glGenTextures(1, backgroundTilesTexture.getIdPtr());
+	glBindTexture(GL_TEXTURE_2D, backgroundTilesTexture.getId());
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexImage2D(
+			GL_TEXTURE_2D,
+			0,
+			GL_R8UI,
+			BACKGROUND_SIZE,
+			BACKGROUND_SIZE,
+			0,
+			GL_RED_INTEGER,
+			GL_UNSIGNED_BYTE,
+			BACKGROUND_TILES);
+
+	backgroundShader = compileShader("background.vert", "background.frag");
 }
 
 void Renderer::render(const Universe &universe)
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  glUseProgram(sprite1x1Shader.getId());
-  GLint worldPosition = glGetUniformLocation(sprite1x1Shader.getId(), "worldPosition");
-	GLint worldToScreenId = glGetUniformLocation(sprite1x1Shader.getId(), "worldToScreen");
-	GLint tileIndex = glGetUniformLocation(sprite1x1Shader.getId(), "tileIndex");
-  GLint tileTexture = glGetUniformLocation(sprite1x1Shader.getId(), "tileTexture");
-
 	glm::mat4 cameraMatrix = glm::mat4(
-			1.0f, 0.0f, 0.0f, -universe.getCamera()->x * 32,
-			0.0f, 1.0f, 0.0f, -universe.getCamera()->y * 32,
-			0.0f, 0.0f, 1.0f, 0.0f,
-			0.0f, 0.0f, 0.0f, 1.0f);
+		1.0f, 0.0f, 0.0f, -universe.getCamera()->x * TILE_SIZE,
+		0.0f, 1.0f, 0.0f, -universe.getCamera()->y * TILE_SIZE,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f);
 
 	glm::mat4 projectionMatrix = glm::mat4(
-			2.0f / SCREEN_WIDTH, 0.0f, 0.0f, -1.0f,
-			0.0f, 2.0f / SCREEN_HEIGHT, 0.0f, -1.0f,
-			0.0f, 0.0f, 1.0f, 0.0f,
-			0.0f, 0.0f, 0.0f, 1.0f);
+		2.0f / SCREEN_WIDTH, 0.0f, 0.0f, -1.0f,
+		0.0f, 2.0f / SCREEN_HEIGHT, 0.0f, -1.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f);
 
 	glm::mat4 worldToScreen = cameraMatrix * projectionMatrix;
 
-	glUniformMatrix4fv(worldToScreenId, 1, false, &worldToScreen[0][0]);
-
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, tilesetTexture.getId());
-  glUniform1i(tileTexture, 0);
-  glBindVertexArray(sprite1x1VA.getId());
-
-	for (auto &sprite_weak : universe.getRenderableSprites())
-	{
-		if (auto sprite = sprite_weak.lock()) {
-			glUniform2f(worldPosition, sprite->x, sprite->y);
-			glUniform1ui(tileIndex, sprite->tileIndex);
-			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		}
-	}
+	renderBackground(universe, worldToScreen);
+	renderSprites(universe, worldToScreen);
 
   GLenum err;
   while ((err = glGetError()) != GL_NO_ERROR) {
@@ -128,14 +146,64 @@ void Renderer::render(const Universe &universe)
 	SDL_GL_SwapWindow(window.get());
 }
 
-GLProgram Renderer::compileShader(const std::string &vertexShaderCode, std::string fragmentShaderCode)
+
+void Renderer::renderBackground(const Universe &universe, glm::mat4 &worldToScreen)
+{
+	glUseProgram(backgroundShader.getId());
+	GLint uWorldToScreen = glGetUniformLocation(backgroundShader.getId(), "worldToScreen");
+	GLint uBackgorundSize = glGetUniformLocation(backgroundShader.getId(), "backgorundSize");
+	GLint uTileTexture = glGetUniformLocation(backgroundShader.getId(), "tileTexture");
+	GLint uBackgroundTilesTexture = glGetUniformLocation(backgroundShader.getId(), "backgroundTilesTexture");
+
+	glBindVertexArray(quadVA.getId());
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, tilesetTexture.getId());
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, backgroundTilesTexture.getId());
+
+	glUniformMatrix4fv(uWorldToScreen, 1, false, &worldToScreen[0][0]);
+	glUniform2f(uBackgorundSize, BACKGROUND_SIZE, BACKGROUND_SIZE);
+	glUniform1i(uTileTexture, 0);
+	glUniform1i(uBackgroundTilesTexture, 1);
+
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+}
+
+void Renderer::renderSprites(const Universe &universe, glm::mat4 &worldToScreen)
+{
+	glUseProgram(spriteShader.getId());
+	GLint uWorldPosition = glGetUniformLocation(spriteShader.getId(), "worldPosition");
+	GLint uWorldToScreen = glGetUniformLocation(spriteShader.getId(), "worldToScreen");
+	GLint uTileIndex = glGetUniformLocation(spriteShader.getId(), "tileIndex");
+	GLint uTileTexture = glGetUniformLocation(spriteShader.getId(), "tileTexture");
+
+	glBindVertexArray(quadVA.getId());
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, tilesetTexture.getId());
+
+	glUniformMatrix4fv(uWorldToScreen, 1, false, &worldToScreen[0][0]);
+	glUniform1i(uTileTexture, 0);
+	for (auto &sprite_weak : universe.getRenderableSprites())
+	{
+		if (auto sprite = sprite_weak.lock()) {
+			glUniform2f(uWorldPosition, sprite->x, sprite->y);
+			glUniform1ui(uTileIndex, sprite->tileIndex);
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		}
+	}
+}
+
+GLProgram Renderer::compileShader(const char *vertexFile, const char *fragmentFile)
 {
 	GLint result = GL_TRUE;
 	GLchar errorMessage[4096];
 
+	std::string vertexCode = loadFile(vertexFile);
+	std::string fragmentCode = loadFile(fragmentFile);
+
   GLShader vertexShader(glCreateShader(GL_VERTEX_SHADER));
-	char const *vertexShaderCodePtr = vertexShaderCode.c_str();
-  glShaderSource(vertexShader.getId(), 1, &vertexShaderCodePtr, NULL);
+	char const *vertexCodePtr = vertexCode.c_str();
+  glShaderSource(vertexShader.getId(), 1, &vertexCodePtr, NULL);
   glCompileShader(vertexShader.getId());
   glGetShaderiv(vertexShader.getId(), GL_COMPILE_STATUS, &result);
 	if (result != GL_TRUE) {
@@ -145,8 +213,8 @@ GLProgram Renderer::compileShader(const std::string &vertexShaderCode, std::stri
 	}
 
   GLShader fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	char const * fragmentShaderCodePtr = fragmentShaderCode.c_str();
-  glShaderSource(fragmentShader.getId(), 1, &fragmentShaderCodePtr, NULL);
+	char const * fragmentCodePtr = fragmentCode.c_str();
+  glShaderSource(fragmentShader.getId(), 1, &fragmentCodePtr, NULL);
   glCompileShader(fragmentShader.getId());
   glGetShaderiv(fragmentShader.getId(), GL_COMPILE_STATUS, &result);
 	if (result != GL_TRUE) {

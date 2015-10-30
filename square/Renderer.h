@@ -13,25 +13,26 @@ public:
 	void render(const Universe &universe);
 
 private:
-	void loadRamResources();
-	void loadGpuResources();
-	static GLProgram compileShader(const std::string &vertexShader, std::string fragmentShader);
+	void renderBackground(const Universe &universe, glm::mat4 &worldToScreen);
+	void renderSprites(const Universe &universe, glm::mat4 &worldToScreen);
+
+	void loadResources();
+	static GLProgram compileShader(const char *vertexFile, const char *fragmentFile);
 	static std::string loadFile(const char *file);
 
 private: // Device.
 	SDL_WindowPtr window;
 	SDL_GLContextPtr context;
 
-private: // RAM resources.
-	SDL_SurfacePtr tilesetBitmap;
-	std::string vertexShaderCode;
-	std::string fragmentShaderCode;
-
 private: // GPU resources.
 	GLTexture tilesetTexture;
-	GLBuffer sprite1x1Mesh;
-  GLVertexArray sprite1x1VA;
-	GLProgram sprite1x1Shader;
+
+	GLProgram spriteShader;
+	GLVertexArray quadVA;
+	GLBuffer quadBuffer;
+
+	GLTexture backgroundTilesTexture;
+	GLProgram backgroundShader;
 };
 
 #endif // SQUARE_RENDEDRER_H

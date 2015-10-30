@@ -40,8 +40,13 @@
     <ClInclude Include="..\..\square\Universe.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\square\fragment.glsl" />
-    <None Include="..\..\square\vertex.glsl" />
+    <None Include="..\..\square\background.frag" />
+    <None Include="..\..\square\background.vert" />
+    <None Include="..\..\square\sprite.frag" />
+    <None Include="..\..\square\sprite.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\square\mario.bmp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{91F69CD6-6958-4031-9181-FF853DD765DE}</ProjectGuid>

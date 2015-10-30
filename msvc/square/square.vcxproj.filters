@@ -19,7 +19,27 @@
     <ClInclude Include="..\..\square\Entity.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\square\vertex.glsl" />
-    <None Include="..\..\square\fragment.glsl" />
+    <None Include="..\..\square\sprite.vert">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="..\..\square\sprite.frag">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="..\..\square\background.frag">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="..\..\square\background.vert">
+      <Filter>resources</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="resources">
+      <UniqueIdentifier>{b9697862-b166-468a-9e92-e6f314d38ffe}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\square\mario.bmp">
+      <Filter>resources</Filter>
+    </Image>
   </ItemGroup>
 </Project>
