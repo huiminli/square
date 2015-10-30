@@ -6,7 +6,6 @@
 #include "Entity.h"
 #include "EntityFactory.h"
 #include "RenderableSprite.h"
-#include "Player.h"
 
 class Universe : public EntityFactory {
 public:

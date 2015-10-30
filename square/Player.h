@@ -28,12 +28,12 @@ private:
   float velocityX = 0.0f;
   float velocityY = 0.0f;
   
-  const float maxWalkVelocity = 200.0f;
-  const float frictionAcceleration = 1000.0f;
-  const float gravityAcceleration = 1000.0f;
-  const float walkAcceleration = 10000.0f;
-  const float jumpVelocity = 500.0f;
-	const float cameraVelocity = 100.0f;
+  const float maxWalkVelocity = 7.0f;
+  const float frictionAcceleration = 30.0f;
+  const float gravityAcceleration = 30.0f;
+  const float walkAcceleration = 300.0f;
+  const float jumpVelocity = 20.0f;
+	const float cameraVelocity = 3.0f;
   
 	Camera *camera;
   std::shared_ptr<RenderableSprite> sprite;

@@ -91,8 +91,8 @@ void Renderer::render(const Universe &universe)
   GLint tileTexture = glGetUniformLocation(sprite1x1Shader.getId(), "tileTexture");
 
 	glm::mat4 cameraMatrix = glm::mat4(
-			1.0f, 0.0f, 0.0f, -universe.getCamera()->x,
-			0.0f, 1.0f, 0.0f, -universe.getCamera()->y,
+			1.0f, 0.0f, 0.0f, -universe.getCamera()->x * 32,
+			0.0f, 1.0f, 0.0f, -universe.getCamera()->y * 32,
 			0.0f, 0.0f, 1.0f, 0.0f,
 			0.0f, 0.0f, 0.0f, 1.0f);
 

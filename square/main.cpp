@@ -26,7 +26,7 @@ void mainLoop() {
 	Universe universe;
 
 	for (unsigned char i = 0; i < 128; ++i) {
-		universe.addEntity(std::make_unique<Block>(universe, 32.0f * (i % 16), 32.0f * (10 - i / 16), i / 16));
+		universe.addEntity(std::make_unique<Block>(universe, i % 16, 10 - i / 16, i / 16));
 	}
 
 	universe.addEntity(std::make_unique<Player>(universe));
