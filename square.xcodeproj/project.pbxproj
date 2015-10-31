@@ -9,7 +9,12 @@
 /* Begin PBXBuildFile section */
 		BB04438E1BD308E1008910EB /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB04438D1BD308E1008910EB /* SDL2.framework */; };
 		BB5F86391BD31CF400ACED8C /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BB5F86381BD31CF400ACED8C /* main.cpp */; settings = {ASSET_TAGS = (); }; };
+		BB93ECAC1BDD89B2000B2D5E /* libGLEW.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BB93ECAB1BDD89B2000B2D5E /* libGLEW.a */; };
+		BB943EA71BE0A3DA00C8BC36 /* Player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BB943EA61BE0A3DA00C8BC36 /* Player.cpp */; settings = {ASSET_TAGS = (); }; };
 		BBC314821BDC3A36003EA665 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBC314811BDC3A36003EA665 /* OpenGL.framework */; };
+		BBC314861BDC3BA4003EA665 /* stdafx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BBC314841BDC3BA4003EA665 /* stdafx.cpp */; settings = {ASSET_TAGS = (); }; };
+		BBC314911BDD763F003EA665 /* Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BBC3148A1BDD763F003EA665 /* Renderer.cpp */; settings = {ASSET_TAGS = (); }; };
+		BBC314921BDD763F003EA665 /* Universe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BBC3148E1BDD763F003EA665 /* Universe.cpp */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -28,7 +33,26 @@
 		BB0443831BD30881008910EB /* square */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = square; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB04438D1BD308E1008910EB /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
 		BB5F86381BD31CF400ACED8C /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		BB93ECAB1BDD89B2000B2D5E /* libGLEW.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGLEW.a; path = ../../../../usr/local/lib/libGLEW.a; sourceTree = "<group>"; };
+		BB943EA61BE0A3DA00C8BC36 /* Player.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Player.cpp; sourceTree = "<group>"; };
+		BB943EA81BE0A48C00C8BC36 /* Player.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
+		BB943EA91BE4723400C8BC36 /* background.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = background.frag; sourceTree = "<group>"; };
+		BB943EAA1BE4723400C8BC36 /* background.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = background.vert; sourceTree = "<group>"; };
+		BB943EAB1BE4723400C8BC36 /* Entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Entity.h; sourceTree = "<group>"; };
+		BB943EAC1BE4723400C8BC36 /* EntityFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EntityFactory.h; sourceTree = "<group>"; };
+		BB943EAD1BE4723400C8BC36 /* sprite.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = sprite.frag; sourceTree = "<group>"; };
+		BB943EAE1BE4723400C8BC36 /* sprite.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = sprite.vert; sourceTree = "<group>"; };
 		BBC314811BDC3A36003EA665 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		BBC314831BDC3BA4003EA665 /* mario.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; path = mario.bmp; sourceTree = "<group>"; };
+		BBC314841BDC3BA4003EA665 /* stdafx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = stdafx.cpp; sourceTree = "<group>"; };
+		BBC314851BDC3BA4003EA665 /* stdafx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stdafx.h; sourceTree = "<group>"; };
+		BBC314881BDD763F003EA665 /* GL_Util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GL_Util.h; sourceTree = "<group>"; };
+		BBC314891BDD763F003EA665 /* RenderableSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderableSprite.h; sourceTree = "<group>"; };
+		BBC3148A1BDD763F003EA665 /* Renderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Renderer.cpp; sourceTree = "<group>"; };
+		BBC3148B1BDD763F003EA665 /* Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer.h; sourceTree = "<group>"; };
+		BBC3148C1BDD763F003EA665 /* SDL_Util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDL_Util.h; sourceTree = "<group>"; };
+		BBC3148E1BDD763F003EA665 /* Universe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Universe.cpp; sourceTree = "<group>"; };
+		BBC3148F1BDD763F003EA665 /* Universe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Universe.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,6 +60,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BB93ECAC1BDD89B2000B2D5E /* libGLEW.a in Frameworks */,
 				BBC314821BDC3A36003EA665 /* OpenGL.framework in Frameworks */,
 				BB04438E1BD308E1008910EB /* SDL2.framework in Frameworks */,
 			);
@@ -47,6 +72,7 @@
 		BB04437A1BD30881008910EB = {
 			isa = PBXGroup;
 			children = (
+				BB93ECAB1BDD89B2000B2D5E /* libGLEW.a */,
 				BBC314811BDC3A36003EA665 /* OpenGL.framework */,
 				BB04438D1BD308E1008910EB /* SDL2.framework */,
 				BB0443851BD30881008910EB /* square */,
@@ -65,7 +91,25 @@
 		BB0443851BD30881008910EB /* square */ = {
 			isa = PBXGroup;
 			children = (
+				BB943EA91BE4723400C8BC36 /* background.frag */,
+				BB943EAA1BE4723400C8BC36 /* background.vert */,
+				BB943EAB1BE4723400C8BC36 /* Entity.h */,
+				BB943EAC1BE4723400C8BC36 /* EntityFactory.h */,
+				BBC314881BDD763F003EA665 /* GL_Util.h */,
 				BB5F86381BD31CF400ACED8C /* main.cpp */,
+				BBC314831BDC3BA4003EA665 /* mario.bmp */,
+				BB943EA61BE0A3DA00C8BC36 /* Player.cpp */,
+				BB943EA81BE0A48C00C8BC36 /* Player.h */,
+				BBC314891BDD763F003EA665 /* RenderableSprite.h */,
+				BBC3148A1BDD763F003EA665 /* Renderer.cpp */,
+				BBC3148B1BDD763F003EA665 /* Renderer.h */,
+				BBC3148C1BDD763F003EA665 /* SDL_Util.h */,
+				BB943EAD1BE4723400C8BC36 /* sprite.frag */,
+				BB943EAE1BE4723400C8BC36 /* sprite.vert */,
+				BBC314841BDC3BA4003EA665 /* stdafx.cpp */,
+				BBC314851BDC3BA4003EA665 /* stdafx.h */,
+				BBC3148E1BDD763F003EA665 /* Universe.cpp */,
+				BBC3148F1BDD763F003EA665 /* Universe.h */,
 			);
 			path = square;
 			sourceTree = "<group>";
@@ -126,7 +170,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BBC314911BDD763F003EA665 /* Renderer.cpp in Sources */,
 				BB5F86391BD31CF400ACED8C /* main.cpp in Sources */,
+				BB943EA71BE0A3DA00C8BC36 /* Player.cpp in Sources */,
+				BBC314921BDD763F003EA665 /* Universe.cpp in Sources */,
+				BBC314861BDC3BA4003EA665 /* stdafx.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -213,10 +261,18 @@
 		BB04438B1BD30881008910EB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 				);
+				HEADER_SEARCH_PATHS = "";
+				"HEADER_SEARCH_PATHS[arch=*]" = (
+					/usr/local/include,
+					/Users/huiminli/dev/square/include,
+				);
+				"LIBRARY_SEARCH_PATHS[arch=*]" = /usr/local/lib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -224,10 +280,13 @@
 		BB04438C1BD30881008910EB /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 				);
+				"LIBRARY_SEARCH_PATHS[arch=*]" = /usr/local/lib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

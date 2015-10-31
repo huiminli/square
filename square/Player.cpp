@@ -20,7 +20,7 @@ Player::Player(EntityFactory &ef)
 	camera = ef.getCamera();
 
 	sprite = ef.newRenderableSprite();
-	sprite->tileIndex = 6;
+	sprite->tileIndex = 60;
 }
 
 // TODO: put the pressed control into a struct
