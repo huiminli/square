@@ -12,7 +12,6 @@ class RenderableSprite;
 class Block : public Entity {
 public:
 	Block(EntityFactory &ef, float x, float y, unsigned tile);
-	void update(float dt) override {}
 
 private:
 	std::shared_ptr<RenderableSprite> sprite;
@@ -25,8 +24,7 @@ public:
 
 private:
   const float maxWalkVelocity = 7.0f;
-  const float frictionAcceleration = 30.0f;
-  const float gravityAcceleration = 30.0f;
+	const float airAcceleration = 20.0f;
   const float walkAcceleration = 300.0f;
   const float jumpVelocity = 20.0f;
 	const float cameraVelocity = 3.0f;

@@ -19,15 +19,18 @@ public:
   std::list<std::weak_ptr<RenderableSprite>> getRenderableSprites() const;
 	std::shared_ptr<RenderableSprite> newRenderableSprite() override;
 
-private:
-	// Gameplay.
+private: // Gameplay.
 	std::list<std::unique_ptr<Entity>> entities;
 
-	// Rendering.
+private: // Rendering.
 	Camera camera;
 	std::list<std::weak_ptr<RenderableSprite>> sprites;
 
-	// Collision.
+
+private: // Collision.
+	void processCollision(float dt);
+	const float frictionAcceleration = 30.0f;
+	const float gravityAcceleration = 30.0f;
 	std::list<std::weak_ptr<Collider>> colliders;
 };
 

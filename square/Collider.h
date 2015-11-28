@@ -6,7 +6,8 @@
 
 class Collider {
 public:
-	glm::vec4 position;
+	glm::vec2 position;
+	glm::vec2 size;
 	glm::vec2 velocity;
 	glm::vec2 acceleration;
 	bool fixed;
