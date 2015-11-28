@@ -17,6 +17,7 @@
     <ClInclude Include="..\..\square\Player.h" />
     <ClInclude Include="..\..\square\EntityFactory.h" />
     <ClInclude Include="..\..\square\Entity.h" />
+    <ClInclude Include="..\..\square\Collider.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\square\sprite.vert">

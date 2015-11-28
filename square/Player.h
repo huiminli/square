@@ -5,6 +5,7 @@
 #include "Entity.h"
 
 class Camera;
+class Collider;
 class EntityFactory;
 class RenderableSprite;
 
@@ -23,11 +24,6 @@ public:
   void update(float dt) override;
 
 private:
-  float x = 0.0f;
-  float y = 0.0f;
-  float velocityX = 0.0f;
-  float velocityY = 0.0f;
-  
   const float maxWalkVelocity = 7.0f;
   const float frictionAcceleration = 30.0f;
   const float gravityAcceleration = 30.0f;
@@ -37,6 +33,7 @@ private:
   
 	Camera *camera;
   std::shared_ptr<RenderableSprite> sprite;
+	std::shared_ptr<Collider> collider;
 };
 
 #endif // SQUARE_PLAYER_H

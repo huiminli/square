@@ -4,6 +4,7 @@
 
 class RenderableSprite;
 
+// TODO(adrw): Encapsulate.
 class Camera {
 public:
 	float x = 0.0f;
@@ -12,6 +13,7 @@ public:
 
 class EntityFactory {
 public:
+	virtual std::shared_ptr<Collider> newCollider() = 0;
 	virtual std::shared_ptr<RenderableSprite> newRenderableSprite() = 0;
 	virtual Camera* getCamera() = 0;
 };

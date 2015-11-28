@@ -18,6 +18,13 @@ void Universe::addEntity(std::unique_ptr<Entity> entity) {
 	entities.push_back(std::move(entity));
 }
 
+std::shared_ptr<Collider> Universe::newCollider() {
+	auto result = std::make_shared<Collider>();
+	// TODO(adrw): Remove unused weak_ptrs from here.
+	colliders.push_back(result);
+	return result;
+}
+
 std::shared_ptr<RenderableSprite> Universe::newRenderableSprite() {
 	auto result = std::make_shared<RenderableSprite>();
 	// TODO(adrw): Remove unused weak_ptrs from here.

@@ -146,7 +146,6 @@ void Renderer::render(const Universe &universe)
 	SDL_GL_SwapWindow(window.get());
 }
 
-
 void Renderer::renderBackground(const Universe &universe, glm::mat4 &worldToScreen)
 {
 	glUseProgram(backgroundShader.getId());
@@ -162,7 +161,7 @@ void Renderer::renderBackground(const Universe &universe, glm::mat4 &worldToScre
 	glBindTexture(GL_TEXTURE_2D, backgroundTilesTexture.getId());
 
 	glUniformMatrix4fv(uWorldToScreen, 1, false, &worldToScreen[0][0]);
-	glUniform2f(uBackgorundSize, BACKGROUND_SIZE, BACKGROUND_SIZE);
+	glUniform2f(uBackgorundSize, (float) BACKGROUND_SIZE, (float) BACKGROUND_SIZE);
 	glUniform1i(uTileTexture, 0);
 	glUniform1i(uBackgroundTilesTexture, 1);
 

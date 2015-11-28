@@ -3,6 +3,7 @@
 #define SQUARE_UNIVERSE_H
 
 #include <list>
+#include "Collider.h"
 #include "Entity.h"
 #include "EntityFactory.h"
 #include "RenderableSprite.h"
@@ -14,6 +15,7 @@ public:
 
 	Camera* getCamera() override { return &camera; }
 	const Camera* getCamera() const { return &camera; }
+	std::shared_ptr<Collider> newCollider() override;
   std::list<std::weak_ptr<RenderableSprite>> getRenderableSprites() const;
 	std::shared_ptr<RenderableSprite> newRenderableSprite() override;
 
@@ -24,6 +26,9 @@ private:
 	// Rendering.
 	Camera camera;
 	std::list<std::weak_ptr<RenderableSprite>> sprites;
+
+	// Collision.
+	std::list<std::weak_ptr<Collider>> colliders;
 };
 
 #endif // SQUARE_UNIVERSE_H
