@@ -1,9 +1,7 @@
 #include "stdafx.h"
 #include "Player.h"
 
-#include "Collider.h"
 #include "EntityFactory.h"
-#include "RenderableSprite.h"
 
 using std::copysign;
 using std::fabs;
@@ -45,6 +43,6 @@ void Player::update(float dt)
 	bool sPressed = SDL_GetKeyboardState(nullptr)[SDL_SCANCODE_S] != 0;
 	bool aPressed = SDL_GetKeyboardState(nullptr)[SDL_SCANCODE_A] != 0;
 	bool dPressed = SDL_GetKeyboardState(nullptr)[SDL_SCANCODE_D] != 0;
-	camera->x += (dPressed - aPressed) * cameraVelocity * dt;
-	camera->y += (wPressed - sPressed) * cameraVelocity * dt;
+	camera->position.x += (dPressed - aPressed) * cameraVelocity * dt;
+	camera->position.y += (wPressed - sPressed) * cameraVelocity * dt;
 }

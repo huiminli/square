@@ -4,7 +4,7 @@
 
 class Entity {
 public:
-	virtual void update(float dt) {};
+	virtual void update(float dt) = 0;
 };
 
 #endif // SQUARE_ENTITY_H

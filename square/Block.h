@@ -24,6 +24,7 @@ private:
 class Block : public Entity {
 public:
 	Block(EntityFactory &ef, const glm::vec2 &position, const BlockType *blockTemplate);
+	void update(float dt) override;
 
 private:
 	const BlockType *blockTemplate;

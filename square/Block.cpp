@@ -1,9 +1,7 @@
 #include "stdafx.h"
 #include "Block.h"
 
-#include "Collider.h"
 #include "EntityFactory.h"
-#include "RenderableSprite.h"
 
 Block::Block(EntityFactory& ef, const glm::vec2 &position, const BlockType *blockTemplate)
 	: blockTemplate(blockTemplate)
@@ -17,5 +15,11 @@ Block::Block(EntityFactory& ef, const glm::vec2 &position, const BlockType *bloc
 		this->collider->position = position;
 		this->collider->size = glm::vec2(1, 1);
 		this->collider->fixed = true;
+	}
+}
+
+void Block::update(float dt) {
+	if (collider) {
+		sprite->position = collider->position;
 	}
 }

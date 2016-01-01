@@ -2,8 +2,7 @@
 #include "SDL_Util.h"
 #include "Block.h"
 #include "Player.h"
-#include "Renderer.h"
-#include "Universe.h"
+#include "Scene.h"
 
 namespace {
   const unsigned UNIVERSE_TICK_MS = 10;
@@ -61,20 +60,17 @@ void mainLoop() {
 	SDL sdl;
 	sdl.initialize();
 
-
-	Universe universe;
+	Scene scene;
+	scene.initialize();
 
 	for (unsigned char x = 0; x < BACKGROUND_SIZE_X; ++x) {
 		for (unsigned char y = 0; y < BACKGROUND_SIZE_Y; ++y) {
 			const BlockType *blockType = &BLOCK_TYPES[BACKGROUND_BLOCKS[y * BACKGROUND_SIZE_X + x]];
-			universe.addEntity(std::make_unique<Block>(universe, glm::vec2(x, BACKGROUND_SIZE_Y - 1 - y), blockType));
+			scene.addEntity(std::make_unique<Block>(scene, glm::vec2(x, BACKGROUND_SIZE_Y - 1 - y), blockType));
 		}
 	}
 
-	universe.addEntity(std::make_unique<Player>(universe));
-
-	Renderer renderer;
-	renderer.initialize();
+	scene.addEntity(std::make_unique<Player>(scene));
 
 	unsigned lastSimulationTimeMs = SDL_GetTicks();
 	while (true) {
@@ -96,9 +92,9 @@ void mainLoop() {
 
 		while (now - lastSimulationTimeMs >= UNIVERSE_TICK_MS) {
 			lastSimulationTimeMs += UNIVERSE_TICK_MS;
-			universe.update(UNIVERSE_TICK_MS / 1000.0f);
+			scene.update(UNIVERSE_TICK_MS / 1000.0f);
 		}
 
-		renderer.render(universe);
+		scene.render();
 	}
 }

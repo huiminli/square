@@ -2,20 +2,12 @@
 #ifndef SQUARE_ENTITY_FACTORY
 #define SQUARE_ENTITY_FACTORY
 
-class RenderableSprite;
+#include "PhysicsApi.h"
+#include "RendererApi.h"
 
-// TODO(adrw): Encapsulate.
-class Camera {
-public:
-	float x = 0.0f;
-	float y = 0.0f;
-};
-
-class EntityFactory {
-public:
-	virtual std::shared_ptr<Collider> newCollider() = 0;
-	virtual std::shared_ptr<RenderableSprite> newRenderableSprite() = 0;
-	virtual Camera* getCamera() = 0;
-};
+class EntityFactory 
+	: public PhysicsFactory,
+	public RendererFactory
+{};
 
 #endif // SQUARE_ENTITY_FACTORY

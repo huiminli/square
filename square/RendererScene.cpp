@@ -1,7 +1,5 @@
 #include "stdafx.h"
-#include "Renderer.h"
-#include "GL_Util.h"
-#include "Universe.h"
+#include "RendererScene.h"
 
 namespace {
 	const char *WINDOW_TITLE = "Game of Squares";
@@ -17,7 +15,7 @@ namespace {
 	};	
 }
 
-void Renderer::initialize()
+void RendererScene::initialize()
 {
   SDL_Check(SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE));
   SDL_Check(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4));
@@ -45,7 +43,7 @@ void Renderer::initialize()
 	loadResources();
 }
 
-void Renderer::loadResources() {
+void RendererScene::loadResources() {
 	SDL_SurfacePtr tilesetBitmap;
 	SDL_Check(tilesetBitmap.reset(SDL_LoadBMP("mario.bmp")));
 
@@ -97,13 +95,13 @@ void Renderer::loadResources() {
 	//backgroundShader = compileShader("background.vert", "background.frag");
 }
 
-void Renderer::render(const Universe &universe)
+void RendererScene::render()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glm::mat4 cameraMatrix = glm::mat4(
-		1.0f, 0.0f, 0.0f, -universe.getCamera()->x * TILE_SIZE,
-		0.0f, 1.0f, 0.0f, -universe.getCamera()->y * TILE_SIZE,
+		1.0f, 0.0f, 0.0f, -camera.position.x * TILE_SIZE,
+		0.0f, 1.0f, 0.0f, -camera.position.y * TILE_SIZE,
 		0.0f, 0.0f, 1.0f, 0.0f,
 		0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -115,8 +113,8 @@ void Renderer::render(const Universe &universe)
 
 	glm::mat4 worldToScreen = cameraMatrix * projectionMatrix;
 
-	// renderBackground(universe, worldToScreen);
-	renderSprites(universe, worldToScreen);
+	// renderBackground(worldToScreen);
+	renderSprites(worldToScreen);
 
   GLenum err;
   while ((err = glGetError()) != GL_NO_ERROR) {
@@ -126,7 +124,7 @@ void Renderer::render(const Universe &universe)
 	SDL_GL_SwapWindow(window.get());
 }
 
-//void Renderer::renderBackground(const Universe &universe, glm::mat4 &worldToScreen)
+//void RendererScene::renderBackground(glm::mat4 &worldToScreen)
 //{
 //	glUseProgram(backgroundShader.getId());
 //	GLint uWorldToScreen = glGetUniformLocation(backgroundShader.getId(), "worldToScreen");
@@ -148,7 +146,7 @@ void Renderer::render(const Universe &universe)
 //	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 //}
 
-void Renderer::renderSprites(const Universe &universe, glm::mat4 &worldToScreen)
+void RendererScene::renderSprites(glm::mat4 &worldToScreen)
 {
 	glUseProgram(spriteShader.getId());
 	GLint uWorldPosition = glGetUniformLocation(spriteShader.getId(), "worldPosition");
@@ -162,17 +160,29 @@ void Renderer::renderSprites(const Universe &universe, glm::mat4 &worldToScreen)
 
 	glUniformMatrix4fv(uWorldToScreen, 1, false, &worldToScreen[0][0]);
 	glUniform1i(uTileTexture, 0);
-	for (auto &sprite_weak : universe.getRenderableSprites())
+	for (auto &sprite_weak : sprites)
 	{
 		if (auto sprite = sprite_weak.lock()) {
 			glUniform2f(uWorldPosition, sprite->position.x, sprite->position.y);
 			glUniform1ui(uTileIndex, sprite->tileIndex);
 			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		} else {
+			// TODO(adrw): Remove unused weak_ptrs from here.
 		}
 	}
 }
 
-GLProgram Renderer::compileShader(const char *vertexFile, const char *fragmentFile)
+std::shared_ptr<RenderableSprite> RendererScene::newRenderableSprite() {
+	auto result = std::make_shared<RenderableSprite>();
+	sprites.push_back(result);
+	return result;
+}
+
+Camera* RendererScene::getCamera() {
+	return &camera;
+}
+
+GLProgram RendererScene::compileShader(const char *vertexFile, const char *fragmentFile)
 {
 	GLint result = GL_TRUE;
 	GLchar errorMessage[4096];
@@ -216,7 +226,7 @@ GLProgram Renderer::compileShader(const char *vertexFile, const char *fragmentFi
 	return program;
 }
 
-std::string Renderer::loadFile(const char *file) {
+std::string RendererScene::loadFile(const char *file) {
 	std::ifstream stream(file, std::ios::in);
 	if (stream.fail()) {
 		std::stringstream message; message << "System error in 'ifstream': " << strerror(errno);
