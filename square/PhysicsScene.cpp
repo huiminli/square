@@ -9,6 +9,10 @@ using std::min;
 void PhysicsScene::processCollision(float dt) {
 	for (auto &collider_weak : colliders) {
 		if (auto collider = collider_weak.lock()) {
+			if (collider->fixed) {
+				continue;
+			}
+
 			collider->velocity.y -= gravityAcceleration * dt;
 			collider->position += collider->velocity * dt;
 

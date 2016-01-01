@@ -11,7 +11,7 @@ class RenderableSprite;
 
 class Player : public Entity {
 public:
-  Player(EntityFactory &ef);
+  Player(EntityFactory &ef, const glm::vec2 &position);
   void update(float dt) override;
 
 private:

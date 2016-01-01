@@ -70,7 +70,7 @@ void mainLoop() {
 		}
 	}
 
-	scene.addEntity(std::make_unique<Player>(scene));
+	scene.addEntity(std::make_unique<Player>(scene, glm::vec2(0, 10)));
 
 	unsigned lastSimulationTimeMs = SDL_GetTicks();
 	while (true) {
