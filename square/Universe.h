@@ -26,7 +26,6 @@ private: // Rendering.
 	Camera camera;
 	std::list<std::weak_ptr<RenderableSprite>> sprites;
 
-
 private: // Collision.
 	void processCollision(float dt);
 	const float frictionAcceleration = 30.0f;

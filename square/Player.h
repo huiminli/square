@@ -9,14 +9,6 @@ class Collider;
 class EntityFactory;
 class RenderableSprite;
 
-class Block : public Entity {
-public:
-	Block(EntityFactory &ef, float x, float y, unsigned tile);
-
-private:
-	std::shared_ptr<RenderableSprite> sprite;
-};
-
 class Player : public Entity {
 public:
   Player(EntityFactory &ef);

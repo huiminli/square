@@ -31,8 +31,8 @@ private: // GPU resources.
 	GLVertexArray quadVA;
 	GLBuffer quadBuffer;
 
-	GLTexture backgroundTilesTexture;
-	GLProgram backgroundShader;
+	//GLTexture backgroundTilesTexture;
+	//GLProgram backgroundShader;
 };
 
 #endif // SQUARE_RENDEDRER_H

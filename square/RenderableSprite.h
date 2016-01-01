@@ -4,8 +4,9 @@
 
 class RenderableSprite {
 public:
-	float x, y;
+	glm::vec2 position;
 	int tileIndex;
+	bool fixed;
 };
 
 #endif // SQUARE_RENDERABLE_SPRITE_H

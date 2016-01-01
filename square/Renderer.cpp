@@ -14,27 +14,7 @@ namespace {
 		 1.0f, 0.0f,
      0.0f, 1.0f,
 		 1.0f, 1.0f,
-	};
-
-	const unsigned BACKGROUND_SIZE = 16;
-	const unsigned char BACKGROUND_TILES[BACKGROUND_SIZE * BACKGROUND_SIZE] = {
-		108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108,
-		108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108,
-		108, 108, 108, 108, 108, 108, 108, 108, 108, 112, 113, 114, 108, 108, 108, 108,
-		108, 108, 108, 108, 108, 108, 108, 108, 108, 128, 129, 130, 108, 108, 108, 108,
-		108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108,
-		108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108,
-		108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108,
-		108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108,
-		108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108,
-		108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108,
-		108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108,
-		108, 108,   1, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108,
-		108,  16,  17,  18, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108,
-		 16,  17,  19,  17,  18, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108, 108,
-		0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-		0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-	};
+	};	
 }
 
 void Renderer::initialize()
@@ -97,24 +77,24 @@ void Renderer::loadResources() {
 
 	spriteShader = compileShader("sprite.vert", "sprite.frag");
 
-	glGenTextures(1, backgroundTilesTexture.getIdPtr());
-	glBindTexture(GL_TEXTURE_2D, backgroundTilesTexture.getId());
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexImage2D(
-			GL_TEXTURE_2D,
-			0,
-			GL_R8UI,
-			BACKGROUND_SIZE,
-			BACKGROUND_SIZE,
-			0,
-			GL_RED_INTEGER,
-			GL_UNSIGNED_BYTE,
-			BACKGROUND_TILES);
+	//glGenTextures(1, backgroundTilesTexture.getIdPtr());
+	//glBindTexture(GL_TEXTURE_2D, backgroundTilesTexture.getId());
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	//glTexImage2D(
+	//		GL_TEXTURE_2D,
+	//		0,
+	//		GL_R8UI,
+	//		BACKGROUND_SIZE,
+	//		BACKGROUND_SIZE,
+	//		0,
+	//		GL_RED_INTEGER,
+	//		GL_UNSIGNED_BYTE,
+	//		BACKGROUND_TILES);
 
-	backgroundShader = compileShader("background.vert", "background.frag");
+	//backgroundShader = compileShader("background.vert", "background.frag");
 }
 
 void Renderer::render(const Universe &universe)
@@ -135,7 +115,7 @@ void Renderer::render(const Universe &universe)
 
 	glm::mat4 worldToScreen = cameraMatrix * projectionMatrix;
 
-	renderBackground(universe, worldToScreen);
+	// renderBackground(universe, worldToScreen);
 	renderSprites(universe, worldToScreen);
 
   GLenum err;
@@ -146,27 +126,27 @@ void Renderer::render(const Universe &universe)
 	SDL_GL_SwapWindow(window.get());
 }
 
-void Renderer::renderBackground(const Universe &universe, glm::mat4 &worldToScreen)
-{
-	glUseProgram(backgroundShader.getId());
-	GLint uWorldToScreen = glGetUniformLocation(backgroundShader.getId(), "worldToScreen");
-	GLint uBackgorundSize = glGetUniformLocation(backgroundShader.getId(), "backgorundSize");
-	GLint uTileTexture = glGetUniformLocation(backgroundShader.getId(), "tileTexture");
-	GLint uBackgroundTilesTexture = glGetUniformLocation(backgroundShader.getId(), "backgroundTilesTexture");
-
-	glBindVertexArray(quadVA.getId());
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, tilesetTexture.getId());
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, backgroundTilesTexture.getId());
-
-	glUniformMatrix4fv(uWorldToScreen, 1, false, &worldToScreen[0][0]);
-	glUniform2f(uBackgorundSize, (float) BACKGROUND_SIZE, (float) BACKGROUND_SIZE);
-	glUniform1i(uTileTexture, 0);
-	glUniform1i(uBackgroundTilesTexture, 1);
-
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-}
+//void Renderer::renderBackground(const Universe &universe, glm::mat4 &worldToScreen)
+//{
+//	glUseProgram(backgroundShader.getId());
+//	GLint uWorldToScreen = glGetUniformLocation(backgroundShader.getId(), "worldToScreen");
+//	GLint uBackgorundSize = glGetUniformLocation(backgroundShader.getId(), "backgorundSize");
+//	GLint uTileTexture = glGetUniformLocation(backgroundShader.getId(), "tileTexture");
+//	GLint uBackgroundTilesTexture = glGetUniformLocation(backgroundShader.getId(), "backgroundTilesTexture");
+//
+//	glBindVertexArray(quadVA.getId());
+//	glActiveTexture(GL_TEXTURE0);
+//	glBindTexture(GL_TEXTURE_2D, tilesetTexture.getId());
+//	glActiveTexture(GL_TEXTURE1);
+//	glBindTexture(GL_TEXTURE_2D, backgroundTilesTexture.getId());
+//
+//	glUniformMatrix4fv(uWorldToScreen, 1, false, &worldToScreen[0][0]);
+//	glUniform2f(uBackgorundSize, (float) BACKGROUND_SIZE, (float) BACKGROUND_SIZE);
+//	glUniform1i(uTileTexture, 0);
+//	glUniform1i(uBackgroundTilesTexture, 1);
+//
+//	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+//}
 
 void Renderer::renderSprites(const Universe &universe, glm::mat4 &worldToScreen)
 {
@@ -185,7 +165,7 @@ void Renderer::renderSprites(const Universe &universe, glm::mat4 &worldToScreen)
 	for (auto &sprite_weak : universe.getRenderableSprites())
 	{
 		if (auto sprite = sprite_weak.lock()) {
-			glUniform2f(uWorldPosition, sprite->x, sprite->y);
+			glUniform2f(uWorldPosition, sprite->position.x, sprite->position.y);
 			glUniform1ui(uTileIndex, sprite->tileIndex);
 			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 		}

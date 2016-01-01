@@ -1,19 +1,14 @@
 #include "stdafx.h"
 #include "Player.h"
-#include "Universe.h"
+
+#include "Collider.h"
+#include "EntityFactory.h"
+#include "RenderableSprite.h"
 
 using std::copysign;
 using std::fabs;
 using std::max;
 using std::min;
-
-Block::Block(EntityFactory & ef, float x, float y, unsigned tile)
-{
-	sprite = ef.newRenderableSprite();
-	sprite->x = x;
-	sprite->y = y;
-	sprite->tileIndex = tile;
-}
 
 Player::Player(EntityFactory &ef)
 {
@@ -34,8 +29,7 @@ Player::Player(EntityFactory &ef)
 void Player::update(float dt)
 {
 	// Sprite update.
-	sprite->x = collider->position.x;
-	sprite->y = collider->position.y;
+	sprite->position = collider->position;
 
 	// Collider update.
 	bool rightPressed = SDL_GetKeyboardState(nullptr)[SDL_SCANCODE_RIGHT] != 0;
