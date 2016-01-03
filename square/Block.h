@@ -5,7 +5,7 @@
 #include <memory>
 #include "Entity.h"
 
-class Collider;
+class AABBCollider;
 class EntityFactory;
 class RenderableSprite;
 
@@ -29,7 +29,7 @@ public:
 private:
 	const BlockType *blockTemplate;
 	std::shared_ptr<RenderableSprite> sprite;
-	std::shared_ptr<Collider> collider;
+	std::shared_ptr<AABBCollider> collider;
 };
 
 #endif // SQUARE_BLOCK_H

@@ -15,7 +15,7 @@ public:
 	void render() { renderer.render(); };
 	void addEntity(std::unique_ptr<Entity> entity) { entities.push_back(std::move(entity)); }
 
-	std::shared_ptr<Collider> newCollider() override { return physics.newCollider(); }
+	std::shared_ptr<AABBCollider> newAABBCollider() override { return physics.newAABBCollider(); }
 	Camera* getCamera() override { return renderer.getCamera(); }
 	std::shared_ptr<RenderableSprite> newRenderableSprite() override { return renderer.newRenderableSprite(); }
 

@@ -11,15 +11,15 @@ Block::Block(EntityFactory& ef, const glm::vec2 &position, const BlockType *bloc
 	this->sprite->tileIndex = blockTemplate->getTileIndex();
 
 	if (blockTemplate->getCollision()) {
-		this->collider = ef.newCollider();
-		this->collider->position = position;
-		this->collider->size = glm::vec2(1, 1);
+		this->collider = ef.newAABBCollider();
+		this->collider->min = position;
+		this->collider->max = position + glm::vec2(1, 1);
 		this->collider->fixed = true;
 	}
 }
 
 void Block::update(float dt) {
 	if (collider) {
-		sprite->position = collider->position;
+		sprite->position = collider->min;
 	}
 }

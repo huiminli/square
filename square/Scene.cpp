@@ -8,9 +8,9 @@ using std::min;
 
 void Scene::update(float dt)
 {
-	physics.processCollision(dt);
-
 	for (auto &entity : entities) {
 		entity->update(dt);
 	}
+
+	physics.processCollision(dt);
 }

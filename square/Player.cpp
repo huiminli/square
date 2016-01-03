@@ -8,6 +8,14 @@ using std::fabs;
 using std::max;
 using std::min;
 
+namespace {
+	const float maxWalkVelocity = 5.0f;
+	const float airAcceleration = 20.0f;
+	const float walkAcceleration = 200.0f;
+	const float jumpVelocity = 20.0f;
+	const float cameraVelocity = 3.0f;
+}
+
 Player::Player(EntityFactory &ef, const glm::vec2 &position)
 {
 	camera = ef.getCamera();
@@ -16,11 +24,10 @@ Player::Player(EntityFactory &ef, const glm::vec2 &position)
 	sprite->position = position;
 	sprite->tileIndex = 60;
 
-	collider = ef.newCollider();
-	collider->position = position;
-	collider->size = glm::vec2(1.0f, 1.0f);
+	collider = ef.newAABBCollider();
+	collider->min = position;
+	collider->max = position + glm::vec2(1.0f, 1.0f);
 	collider->velocity = glm::vec2(0.0f);
-	collider->acceleration = glm::vec2(0.0f);
 	collider->fixed = false;
 }
 
@@ -28,16 +35,20 @@ Player::Player(EntityFactory &ef, const glm::vec2 &position)
 void Player::update(float dt)
 {
 	// Sprite update.
-	sprite->position = collider->position;
+	sprite->position = collider->min;
 
 	// Collider update.
 	bool rightPressed = SDL_GetKeyboardState(nullptr)[SDL_SCANCODE_RIGHT] != 0;
 	bool leftPressed = SDL_GetKeyboardState(nullptr)[SDL_SCANCODE_LEFT] != 0;
 	bool upPressed = SDL_GetKeyboardState(nullptr)[SDL_SCANCODE_UP] != 0;
-  bool onGround = collider->position.y < 0.001f;
+	bool downPressed = SDL_GetKeyboardState(nullptr)[SDL_SCANCODE_DOWN] != 0;
+	bool onGround = collider->normal.y >= 0.999f;
 	collider->velocity.x += (rightPressed - leftPressed) * (onGround ? walkAcceleration : airAcceleration) * dt;
 	collider->velocity.x = max(-maxWalkVelocity, min(maxWalkVelocity, collider->velocity.x));
 	collider->velocity.y = (onGround && upPressed) ? jumpVelocity : collider->velocity.y;
+
+	// collider->velocity.x = (rightPressed - leftPressed) * 5;
+	// collider->velocity.y = (upPressed - downPressed) * 5;
 
 	// Camera update.
 	bool wPressed = SDL_GetKeyboardState(nullptr)[SDL_SCANCODE_W] != 0;

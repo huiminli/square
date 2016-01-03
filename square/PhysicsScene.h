@@ -9,12 +9,10 @@
 class PhysicsScene : public PhysicsFactory {
 public:
 	void processCollision(float dt);
-	std::shared_ptr<Collider> newCollider();
+	std::shared_ptr<AABBCollider> newAABBCollider();
 
 private:
-	const float frictionAcceleration = 30.0f;
-	const float gravityAcceleration = 30.0f;
-	std::list<std::weak_ptr<Collider>> colliders;
+	std::list<std::shared_ptr<AABBCollider>> colliders;
 };
 
 #endif // SQUARE_PHYSICS_SYSTEM_H

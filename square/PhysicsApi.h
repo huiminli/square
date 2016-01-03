@@ -5,18 +5,18 @@
 #include <memory>
 #include <glm/glm.hpp>
 
-class Collider {
+class AABBCollider {
 public:
-	glm::vec2 position;
-	glm::vec2 size;
-	glm::vec2 velocity;
-	glm::vec2 acceleration;
+	glm::vec2 min;
+	glm::vec2 max;
+	glm::vec2 velocity = glm::vec2(0, 0);
+	glm::vec2 normal = glm::vec2(0, 0);
 	bool fixed;
 };
 
 class PhysicsFactory {
 public:
-	virtual std::shared_ptr<Collider> newCollider() = 0;
+	virtual std::shared_ptr<AABBCollider> newAABBCollider() = 0;
 };
 
 #endif // SQUARE_PHYSICS_API_H
