@@ -23,65 +23,66 @@ void PhysicsScene::processCollision(float dt) {
 			continue;
 		}
 
+		collider->normal = glm::vec2(0.0f, 0.0f);
 
-		float firstCollisionTime = dt;
-		glm::vec2 firstCollisionNormal = glm::vec2(0, 0);
+		float timeLeft = dt;
+		while (timeLeft > 0.0f) {
+			float firstCollisionTime = dt;
+			glm::vec2 firstCollisionNormal = glm::vec2(0, 0);
 
-		// Check collision.
-		for (auto &other : colliders) {
-			if (collider.get() != other.get()) {
-				glm::vec2 xPenetration = glm::vec2(other->min.x - collider->max.x, other->max.x - collider->min.x);
-				if (collider->velocity.x < 0.0f) {
-					xPenetration = glm::vec2(xPenetration.t, xPenetration.s);
-				}
-				glm::vec2 xPenetrationTime = glm::vec2(INF, INF);
-				if (collider->velocity.x != 0.0) {
-					xPenetrationTime = xPenetration / collider->velocity.x;
-				}
-				else if (xPenetration.s < 0.0f && xPenetration.t > 0.0f) {
-					xPenetrationTime = glm::vec2(-INF, INF);
-				}
+			// Check collision.
+			for (auto &other : colliders) {
+				if (collider.get() != other.get()) {
+					glm::vec2 xPenetration = glm::vec2(other->min.x - collider->max.x, other->max.x - collider->min.x);
+					if (collider->velocity.x < 0.0f) {
+						xPenetration = glm::vec2(xPenetration.t, xPenetration.s);
+					}
+					glm::vec2 xPenetrationTime = glm::vec2(INF, INF);
+					if (collider->velocity.x != 0.0) {
+						xPenetrationTime = xPenetration / collider->velocity.x;
+					}
+					else if (xPenetration.s < 0.0f && xPenetration.t > 0.0f) {
+						xPenetrationTime = glm::vec2(-INF, INF);
+					}
 
-				glm::vec2 yPenetration = glm::vec2(other->min.y - collider->max.y, other->max.y - collider->min.y);
-				if (collider->velocity.y < 0.0f) {
-					yPenetration = glm::vec2(yPenetration.t, yPenetration.s);
-				}
-				glm::vec2 yPenetrationTime = glm::vec2(INF, INF);
-				if (collider->velocity.y != 0.0f) {
-					yPenetrationTime = yPenetration / collider->velocity.y;
-				}
-				else if (yPenetration.s < 0.0f && yPenetration.t > 0.0f) {
-					yPenetrationTime = glm::vec2(-INF, INF);
-				}
+					glm::vec2 yPenetration = glm::vec2(other->min.y - collider->max.y, other->max.y - collider->min.y);
+					if (collider->velocity.y < 0.0f) {
+						yPenetration = glm::vec2(yPenetration.t, yPenetration.s);
+					}
+					glm::vec2 yPenetrationTime = glm::vec2(INF, INF);
+					if (collider->velocity.y != 0.0f) {
+						yPenetrationTime = yPenetration / collider->velocity.y;
+					}
+					else if (yPenetration.s < 0.0f && yPenetration.t > 0.0f) {
+						yPenetrationTime = glm::vec2(-INF, INF);
+					}
 
-				glm::vec2 penetrationTime = glm::vec2(
-					max(xPenetrationTime.s, yPenetrationTime.s),
-					min(xPenetrationTime.t, yPenetrationTime.t));
+					glm::vec2 penetrationTime = glm::vec2(
+						max(xPenetrationTime.s, yPenetrationTime.s),
+						min(xPenetrationTime.t, yPenetrationTime.t));
 
-				if (penetrationTime.t > penetrationTime.s
-					&& penetrationTime.s >= 0.0f
-					&& penetrationTime.s < firstCollisionTime) {
-					firstCollisionTime = penetrationTime.s;
-					firstCollisionNormal = (xPenetrationTime.s > yPenetrationTime.s)
-						? glm::vec2(-copysign(1.0f, collider->velocity.x), 0.0f)
-						: glm::vec2(0.0f, -copysign(1.0f, collider->velocity.y));
+					if (penetrationTime.t > penetrationTime.s
+						&& penetrationTime.s >= 0.0f
+						&& penetrationTime.s < firstCollisionTime) {
+						firstCollisionTime = penetrationTime.s;
+						firstCollisionNormal = (xPenetrationTime.s > yPenetrationTime.s)
+							? glm::vec2(-copysign(1.0f, collider->velocity.x), 0.0f)
+							: glm::vec2(0.0f, -copysign(1.0f, collider->velocity.y));
+					}
 				}
 			}
+
+			// Euler integration.
+			timeLeft -= firstCollisionTime;
+			collider->min += collider->velocity * firstCollisionTime;
+			collider->max += collider->velocity * firstCollisionTime;
+			collider->normal += firstCollisionNormal; // TODO(adrw): Normalize.
+
+			if (glm::length2(firstCollisionNormal) > 0.0f) {
+				glm::vec2 swappedNormal = glm::vec2(firstCollisionNormal.y, firstCollisionNormal.x);
+				collider->velocity = glm::dot(collider->velocity, swappedNormal) * swappedNormal;
+			}
 		}
-
-		// Euler integration.
-		collider->min += collider->velocity * firstCollisionTime;
-		collider->max += collider->velocity * firstCollisionTime;
-		collider->normal = firstCollisionNormal;
-
-		if (glm::length2(collider->normal) > 0.0f) {
-			glm::vec2 swappedNormal = glm::vec2(collider->normal.y, collider->normal.x);
-			collider->velocity = glm::dot(collider->velocity, swappedNormal) * swappedNormal;
-		}
-
-		// TODO(adrw): Sliding without checking for collision.
-		collider->min += collider->velocity * (dt - firstCollisionTime);
-		collider->max += collider->velocity * (dt - firstCollisionTime);
 
 		// TODO(adrw): Applying gravity and friction for the whole frame is a simplification.
 		// Gravity & friction.
