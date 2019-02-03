@@ -19,26 +19,32 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\square\Block.cpp" />
+    <ClCompile Include="..\..\square\glm_ext.cc" />
     <ClCompile Include="..\..\square\main.cpp" />
+    <ClCompile Include="..\..\square\PhysicsScene.cpp" />
     <ClCompile Include="..\..\square\Player.cpp" />
-    <ClCompile Include="..\..\square\Renderer.cpp" />
+    <ClCompile Include="..\..\square\RendererScene.cpp" />
+    <ClCompile Include="..\..\square\Scene.cpp" />
     <ClCompile Include="..\..\square\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\..\square\Universe.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\square\Collider.h" />
+    <ClInclude Include="..\..\square\Block.h" />
     <ClInclude Include="..\..\square\Entity.h" />
     <ClInclude Include="..\..\square\EntityFactory.h" />
+    <ClInclude Include="..\..\square\glm_ext.h" />
     <ClInclude Include="..\..\square\GL_Util.h" />
+    <ClInclude Include="..\..\square\PhysicsApi.h" />
+    <ClInclude Include="..\..\square\PhysicsScene.h" />
     <ClInclude Include="..\..\square\Player.h" />
-    <ClInclude Include="..\..\square\RenderableSprite.h" />
-    <ClInclude Include="..\..\square\Renderer.h" />
+    <ClInclude Include="..\..\square\RendererApi.h" />
+    <ClInclude Include="..\..\square\RendererScene.h" />
+    <ClInclude Include="..\..\square\Scene.h" />
     <ClInclude Include="..\..\square\SDL_Util.h" />
     <ClInclude Include="..\..\square\stdafx.h" />
-    <ClInclude Include="..\..\square\Universe.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\square\background.frag" />

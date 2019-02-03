@@ -8,10 +8,22 @@
 class AABBCollider {
 public:
 	glm::vec2 min;
-	glm::vec2 max;
+  // Use size instead of max to prevent errors from accumulating.
+  glm::vec2 size;
 	glm::vec2 velocity = glm::vec2(0, 0);
-	glm::vec2 normal = glm::vec2(0, 0);
-	bool fixed;
+  // Fixed means that this collider stays in place and doesn't move.
+	bool fixed = false;
+
+  // TODO(adrw): Use int ids instead of pointers.
+  AABBCollider* top = nullptr;
+  AABBCollider* bottom = nullptr;
+  AABBCollider* left = nullptr;
+  AABBCollider* right = nullptr;
+  AABBCollider* inside = nullptr;
+
+  glm::vec2 max() const {
+    return min + size;
+  }
 };
 
 class PhysicsFactory {

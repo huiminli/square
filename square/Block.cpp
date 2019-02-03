@@ -13,7 +13,7 @@ Block::Block(EntityFactory& ef, const glm::vec2 &position, const BlockType *bloc
 	if (blockTemplate->getCollision()) {
 		this->collider = ef.newAABBCollider();
 		this->collider->min = position;
-		this->collider->max = position + glm::vec2(1, 1);
+		this->collider->size = glm::vec2(1, 1);
 		this->collider->fixed = true;
 	}
 }

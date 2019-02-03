@@ -15,6 +15,7 @@ public:
   void update(float dt) override;
 
 private:
+  glm::vec2 starting_position_;
 	Camera *camera;
   std::shared_ptr<RenderableSprite> sprite;
 	std::shared_ptr<AABBCollider> collider;

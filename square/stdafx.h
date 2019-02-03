@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <fstream>
 #include <istream>
+#include <iostream>
 #include <limits>
 #include <list>
 #include <memory>

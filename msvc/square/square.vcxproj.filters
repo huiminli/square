@@ -3,21 +3,63 @@
   <ItemGroup>
     <ClCompile Include="..\..\square\main.cpp" />
     <ClCompile Include="..\..\square\stdafx.cpp" />
-    <ClCompile Include="..\..\square\Renderer.cpp" />
-    <ClCompile Include="..\..\square\Universe.cpp" />
-    <ClCompile Include="..\..\square\Player.cpp" />
+    <ClCompile Include="..\..\square\RendererScene.cpp">
+      <Filter>Engine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\square\PhysicsScene.cpp">
+      <Filter>Engine\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\square\Scene.cpp">
+      <Filter>Engine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\square\Block.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\square\Player.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\square\glm_ext.cc">
+      <Filter>Lib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\square\stdafx.h" />
-    <ClInclude Include="..\..\square\Renderer.h" />
-    <ClInclude Include="..\..\square\Universe.h" />
-    <ClInclude Include="..\..\square\SDL_Util.h" />
-    <ClInclude Include="..\..\square\GL_Util.h" />
-    <ClInclude Include="..\..\square\RenderableSprite.h" />
-    <ClInclude Include="..\..\square\Player.h" />
-    <ClInclude Include="..\..\square\EntityFactory.h" />
-    <ClInclude Include="..\..\square\Entity.h" />
-    <ClInclude Include="..\..\square\Collider.h" />
+    <ClInclude Include="..\..\square\RendererScene.h">
+      <Filter>Engine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\square\PhysicsScene.h">
+      <Filter>Engine\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\square\Scene.h">
+      <Filter>Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\square\Block.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\square\Player.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\square\GL_Util.h">
+      <Filter>Engine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\square\PhysicsApi.h">
+      <Filter>Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\square\RendererApi.h">
+      <Filter>Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\square\SDL_Util.h">
+      <Filter>Engine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\square\Entity.h">
+      <Filter>Engine\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\square\EntityFactory.h">
+      <Filter>Engine\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\square\glm_ext.h">
+      <Filter>Lib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\square\sprite.vert">
@@ -36,6 +78,27 @@
   <ItemGroup>
     <Filter Include="resources">
       <UniqueIdentifier>{b9697862-b166-468a-9e92-e6f314d38ffe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{5c51f8d8-7d14-443c-861b-5cca141554bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{962590a6-cec7-4343-a73d-4bc30f90e76d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core">
+      <UniqueIdentifier>{8ec5963f-d93d-4f05-aafd-f240fc342158}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Physics">
+      <UniqueIdentifier>{5fa5aae6-e7a4-47ac-be3a-10e650ad37e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Renderer">
+      <UniqueIdentifier>{8c9d80ea-612a-482f-8301-6f260c8625bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Entity">
+      <UniqueIdentifier>{ba68567e-e608-4c74-a030-ffeda92ef080}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib">
+      <UniqueIdentifier>{38d816ac-11b1-472a-9387-42e7cf3b607e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
