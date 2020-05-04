@@ -1,4 +1,5 @@
-#include "RendererScene.h"
+#include "stdafx.h"
+#include "Renderer.h"
 
 namespace graphics {
 
@@ -16,7 +17,7 @@ namespace graphics {
 		};
 	}
 
-	void RendererScene::initialize()
+	void Renderer::initialize()
 	{
 		SDL_Check(SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE));
 		SDL_Check(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4));
@@ -44,7 +45,7 @@ namespace graphics {
 		loadResources();
 	}
 
-	void RendererScene::loadResources() {
+	void Renderer::loadResources() {
 		SDL_SurfacePtr tilesetBitmap;
 		SDL_Check(tilesetBitmap.reset(SDL_LoadBMP("graphics/mario.bmp")));
 
@@ -96,7 +97,7 @@ namespace graphics {
 		//backgroundShader = compileShader("background.vert", "background.frag");
 	}
 
-	void RendererScene::render()
+	void Renderer::render()
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -125,7 +126,7 @@ namespace graphics {
 		SDL_GL_SwapWindow(window.get());
 	}
 
-	//void RendererScene::renderBackground(glm::mat4 &worldToScreen)
+	//void Renderer::renderBackground(glm::mat4 &worldToScreen)
 	//{
 	//	glUseProgram(backgroundShader.getId());
 	//	GLint uWorldToScreen = glGetUniformLocation(backgroundShader.getId(), "worldToScreen");
@@ -147,7 +148,7 @@ namespace graphics {
 	//	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	//}
 
-	void RendererScene::renderSprites(glm::mat4& worldToScreen)
+	void Renderer::renderSprites(glm::mat4& worldToScreen)
 	{
 		glUseProgram(spriteShader.getId());
 		GLint uWorldPosition = glGetUniformLocation(spriteShader.getId(), "worldPosition");
@@ -176,17 +177,17 @@ namespace graphics {
 		}
 	}
 
-	std::shared_ptr<api::Sprite> RendererScene::newRenderableSprite() {
+	std::shared_ptr<api::Sprite> Renderer::newRenderableSprite() {
 		auto result = std::make_shared<api::Sprite>();
 		sprites.push_back(result);
 		return result;
 	}
 
-	api::Camera* RendererScene::getCamera() {
+	api::Camera* Renderer::getCamera() {
 		return &camera;
 	}
 
-	GLProgram RendererScene::compileShader(const char* vertexFile, const char* fragmentFile)
+	GLProgram Renderer::compileShader(const char* vertexFile, const char* fragmentFile)
 	{
 		GLint result = GL_TRUE;
 		GLchar errorMessage[4096];
@@ -230,7 +231,7 @@ namespace graphics {
 		return program;
 	}
 
-	std::string RendererScene::loadFile(const char* file) {
+	std::string Renderer::loadFile(const char* file) {
 		std::ifstream stream(file, std::ios::in);
 		if (stream.fail()) {
 			std::stringstream message; message << "System error in 'ifstream': " << strerror(errno);

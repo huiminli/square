@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "common/SDL_Util.h"
 #include "core/Scene.h"
 #include "game/Block.h"

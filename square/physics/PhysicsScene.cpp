@@ -1,5 +1,6 @@
-#include "../common/glm_ext.h"
-#include "PhysicsScene.h"
+#include "stdafx.h"
+#include "common/glm_ext.h"
+#include "physics/PhysicsScene.h"
 
 namespace physics {
 

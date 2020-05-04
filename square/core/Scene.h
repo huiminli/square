@@ -2,7 +2,7 @@
 #include <list>
 #include "Entity.h"
 #include "EntityFactory.h"
-#include "../graphics/RendererScene.h"
+#include "../graphics/Renderer.h"
 #include "../physics/PhysicsScene.h"
 
 namespace core {
@@ -20,7 +20,7 @@ namespace core {
 
 	private:
 		std::list<std::unique_ptr<Entity>> entities;
-		graphics::RendererScene renderer;
+		graphics::Renderer renderer;
 		physics::PhysicsScene physics;
 	};
 

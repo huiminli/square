@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "glm_ext.h"
 
 namespace glm {

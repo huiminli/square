@@ -8,7 +8,7 @@
 
 namespace graphics {
 
-	class RendererScene : public ::graphics::api::System {
+	class Renderer : public ::graphics::api::System {
 	public:
 		void initialize();
 		void render();
