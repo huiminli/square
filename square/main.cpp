@@ -1,10 +1,13 @@
-#include "stdafx.h"
-#include "SDL_Util.h"
-#include "Block.h"
-#include "Player.h"
-#include "Scene.h"
+#include "common/SDL_Util.h"
+#include "core/Scene.h"
+#include "game/Block.h"
+#include "game/Player.h"
+
+using game::BlockType;
+using game::Player;
 
 namespace {
+
   const unsigned UNIVERSE_TICK_MS = 10;
 
 	const unsigned BACKGROUND_SIZE_X = 16;
@@ -65,6 +68,7 @@ namespace {
 	//	1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
 	//	1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
 	//};
+
 }  // namespace
 
 void mainLoop();
@@ -79,13 +83,13 @@ void mainLoop() {
 	SDL sdl;
 	sdl.initialize();
 
-	Scene scene;
+	core::Scene scene;
 	scene.initialize();
 
 	for (unsigned char x = 0; x < BACKGROUND_SIZE_X; ++x) {
 		for (unsigned char y = 0; y < BACKGROUND_SIZE_Y; ++y) {
 			const BlockType *blockType = &BLOCK_TYPES[BACKGROUND_BLOCKS[y * BACKGROUND_SIZE_X + x]];
-			scene.addEntity(std::make_unique<Block>(scene, glm::vec2(x, BACKGROUND_SIZE_Y - 1 - y), blockType));
+			scene.addEntity(std::make_unique<game::Block>(scene, glm::vec2(x, BACKGROUND_SIZE_Y - 1 - y), blockType));
 		}
 	}
 

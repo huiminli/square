@@ -1,9 +1,8 @@
-#include "stdafx.h"
 #include "Block.h"
 
-#include "EntityFactory.h"
+namespace game {
 
-Block::Block(EntityFactory& ef, const glm::vec2 &position, const BlockType *blockTemplate)
+Block::Block(core::EntityFactory& ef, const glm::vec2 &position, const BlockType *blockTemplate)
 	: blockTemplate(blockTemplate)
 {
 	this->sprite = ef.newRenderableSprite();
@@ -12,7 +11,7 @@ Block::Block(EntityFactory& ef, const glm::vec2 &position, const BlockType *bloc
 
 	if (blockTemplate->getCollision()) {
 		this->collider = ef.newAABBCollider();
-		this->collider->min = position;
+		this->collider->position_min = position;
 		this->collider->size = glm::vec2(1, 1);
 		this->collider->fixed = true;
 	}
@@ -20,6 +19,8 @@ Block::Block(EntityFactory& ef, const glm::vec2 &position, const BlockType *bloc
 
 void Block::update(float dt) {
 	if (collider) {
-		sprite->position = collider->min;
+		sprite->position = collider->position_min;
 	}
 }
+
+} // namespace game

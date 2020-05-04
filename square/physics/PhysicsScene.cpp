@@ -1,6 +1,7 @@
-#include "stdafx.h"
+#include "../common/glm_ext.h"
 #include "PhysicsScene.h"
-#include "glm_ext.h"
+
+namespace physics {
 
 using std::copysign;
 using std::fabs;
@@ -16,7 +17,7 @@ namespace {
 void PhysicsScene::processCollision(float dt) {
   std::cout << "PhysicsScene::processCollision" << std::endl;
 
-  for (auto &collider : colliders) {
+  for (auto& collider : colliders) {
     if (collider.use_count() == 1) {
       // TODO(adrw): garbage collect.
       continue;
@@ -51,12 +52,12 @@ void PhysicsScene::processCollision(float dt) {
       glm::vec2 collisionNormal = glm::vec2(0, 0);
 
       // Find first collision.
-      for (auto &other : colliders) {
+      for (auto& other : colliders) {
         if (collider.get() == other.get()) {
           continue;
         }
 
-        glm::vec2 xPenetration = glm::vec2(other->min.x - collider->max().x, other->max().x - collider->min.x);
+        glm::vec2 xPenetration = glm::vec2(other->position_min.x - collider->position_max().x, other->position_max().x - collider->position_min.x);
         if (collider->velocity.x < 0.0f) {
           xPenetration = glm::vec2(xPenetration.t, xPenetration.s);
         }
@@ -68,7 +69,7 @@ void PhysicsScene::processCollision(float dt) {
           xPenetrationTime = glm::vec2(-INF, INF);
         }
 
-        glm::vec2 yPenetration = glm::vec2(other->min.y - collider->max().y, other->max().y - collider->min.y);
+        glm::vec2 yPenetration = glm::vec2(other->position_min.y - collider->position_max().y, other->position_max().y - collider->position_min.y);
         if (collider->velocity.y < 0.0f) {
           yPenetration = glm::vec2(yPenetration.t, yPenetration.s);
         }
@@ -101,7 +102,8 @@ void PhysicsScene::processCollision(float dt) {
             else {
               collider->inside = other.get();
             }
-          } else {
+          }
+          else {
             if (collider->velocity.y > 0) {
               collider->top = other.get();
               collisionNormal = glm::vec2(0.0f, -1.0f);
@@ -120,7 +122,7 @@ void PhysicsScene::processCollision(float dt) {
 
       // Euler integration.
       timeLeft -= collisionTime;
-      collider->min += collider->velocity * collisionTime;
+      collider->position_min += collider->velocity * collisionTime;
 
       if (glm::length2(collisionNormal) > 0.0f) {
         glm::vec2 perpencicularNormal = glm::vec2(collisionNormal.y, collisionNormal.x);
@@ -130,8 +132,10 @@ void PhysicsScene::processCollision(float dt) {
   }
 }
 
-std::shared_ptr<AABBCollider> PhysicsScene::newAABBCollider() {
-  auto result = std::make_shared<AABBCollider>();
+std::shared_ptr<api::AABBCollider> PhysicsScene::newAABBCollider() {
+  auto result = std::make_shared<api::AABBCollider>();
   colliders.push_back(result);
   return result;
 }
+
+} // namespace physics
