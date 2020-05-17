@@ -19,70 +19,70 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\square\Block.cpp" />
-    <ClCompile Include="..\..\square\glm_ext.cc" />
+    <ClCompile Include="..\..\square\common\glm_ext.cc" />
+    <ClCompile Include="..\..\square\core\Scene.cpp" />
+    <ClCompile Include="..\..\square\game\Block.cpp" />
+    <ClCompile Include="..\..\square\game\Player.cpp" />
+    <ClCompile Include="..\..\square\graphics\Renderer.cpp" />
+    <ClCompile Include="..\..\square\graphics\SpriteGridImpl.cc" />
     <ClCompile Include="..\..\square\main.cpp" />
-    <ClCompile Include="..\..\square\PhysicsScene.cpp" />
-    <ClCompile Include="..\..\square\Player.cpp" />
-    <ClCompile Include="..\..\square\RendererScene.cpp" />
-    <ClCompile Include="..\..\square\Scene.cpp" />
+    <ClCompile Include="..\..\square\physics\PhysicsGrid.cpp" />
+    <ClCompile Include="..\..\square\physics\PhysicsScene.cpp" />
     <ClCompile Include="..\..\square\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\square\Block.h" />
-    <ClInclude Include="..\..\square\Entity.h" />
-    <ClInclude Include="..\..\square\EntityFactory.h" />
-    <ClInclude Include="..\..\square\glm_ext.h" />
-    <ClInclude Include="..\..\square\GL_Util.h" />
-    <ClInclude Include="..\..\square\PhysicsApi.h" />
-    <ClInclude Include="..\..\square\PhysicsScene.h" />
-    <ClInclude Include="..\..\square\Player.h" />
-    <ClInclude Include="..\..\square\RendererApi.h" />
-    <ClInclude Include="..\..\square\RendererScene.h" />
-    <ClInclude Include="..\..\square\Scene.h" />
-    <ClInclude Include="..\..\square\SDL_Util.h" />
+    <ClInclude Include="..\..\square\common\glm_ext.h" />
+    <ClInclude Include="..\..\square\common\SDL_Util.h" />
+    <ClInclude Include="..\..\square\core\Entity.h" />
+    <ClInclude Include="..\..\square\core\EntityFactory.h" />
+    <ClInclude Include="..\..\square\core\Scene.h" />
+    <ClInclude Include="..\..\square\game\Block.h" />
+    <ClInclude Include="..\..\square\game\Player.h" />
+    <ClInclude Include="..\..\square\graphics\api\Camera.h" />
+    <ClInclude Include="..\..\square\graphics\api\Sprite.h" />
+    <ClInclude Include="..\..\square\graphics\api\SpriteGrid.h" />
+    <ClInclude Include="..\..\square\graphics\api\System.h" />
+    <ClInclude Include="..\..\square\graphics\GL_Util.h" />
+    <ClInclude Include="..\..\square\graphics\Renderer.h" />
+    <ClInclude Include="..\..\square\graphics\SpriteGridImpl.h" />
+    <ClInclude Include="..\..\square\physics\api\AABBCollider.h" />
+    <ClInclude Include="..\..\square\physics\api\System.h" />
+    <ClInclude Include="..\..\square\physics\PhysicsGrid.h" />
+    <ClInclude Include="..\..\square\physics\PhysicsScene.h" />
     <ClInclude Include="..\..\square\stdafx.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\square\background.frag" />
-    <None Include="..\..\square\background.vert" />
-    <None Include="..\..\square\sprite.frag" />
-    <None Include="..\..\square\sprite.vert" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="..\..\square\mario.bmp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{91F69CD6-6958-4031-9181-FF853DD765DE}</ProjectGuid>
     <RootNamespace>square</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -124,7 +124,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>D:\Projekty\square\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Projekty\square\square;D:\Projekty\square\include</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>

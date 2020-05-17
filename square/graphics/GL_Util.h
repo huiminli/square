@@ -33,12 +33,6 @@ namespace graphics {
 			return &resource;
 		}
 
-	private:
-		void move(GLResource&& rhs) {
-			resource = rhs.resource;
-			rhs.resource = 0;
-		}
-
 		void reset() {
 			if (resource != 0) {
 				Deleter d;
@@ -46,6 +40,12 @@ namespace graphics {
 			}
 
 			resource = 0;
+		}
+
+	private:
+		void move(GLResource&& rhs) {
+			resource = rhs.resource;
+			rhs.resource = 0;
 		}
 
 		GLuint resource;

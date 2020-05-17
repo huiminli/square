@@ -6,7 +6,7 @@ namespace game {
 Block::Block(core::EntityFactory& ef, const glm::vec2 &position, const BlockType *blockTemplate)
 	: blockTemplate(blockTemplate)
 {
-	this->sprite = ef.newRenderableSprite();
+	this->sprite = ef.newSprite();
 	this->sprite->position = position;
 	this->sprite->tileIndex = blockTemplate->getTileIndex();
 

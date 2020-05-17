@@ -76,25 +76,7 @@ namespace graphics {
 		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), NULL);
 
 		spriteShader = compileShader("graphics/sprite.vert", "graphics/sprite.frag");
-
-		//glGenTextures(1, backgroundTilesTexture.getIdPtr());
-		//glBindTexture(GL_TEXTURE_2D, backgroundTilesTexture.getId());
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		//glTexImage2D(
-		//		GL_TEXTURE_2D,
-		//		0,
-		//		GL_R8UI,
-		//		BACKGROUND_SIZE,
-		//		BACKGROUND_SIZE,
-		//		0,
-		//		GL_RED_INTEGER,
-		//		GL_UNSIGNED_BYTE,
-		//		BACKGROUND_TILES);
-
-		//backgroundShader = compileShader("background.vert", "background.frag");
+		spriteGridShader = compileShader("graphics/spriteGrid.vert", "graphics/spriteGrid.frag");
 	}
 
 	void Renderer::render()
@@ -115,7 +97,7 @@ namespace graphics {
 
 		glm::mat4 worldToScreen = cameraMatrix * projectionMatrix;
 
-		// renderBackground(worldToScreen);
+		renderSpriteGrids(worldToScreen);
 		renderSprites(worldToScreen);
 
 		GLenum err;
@@ -126,27 +108,52 @@ namespace graphics {
 		SDL_GL_SwapWindow(window.get());
 	}
 
-	//void Renderer::renderBackground(glm::mat4 &worldToScreen)
-	//{
-	//	glUseProgram(backgroundShader.getId());
-	//	GLint uWorldToScreen = glGetUniformLocation(backgroundShader.getId(), "worldToScreen");
-	//	GLint uBackgorundSize = glGetUniformLocation(backgroundShader.getId(), "backgorundSize");
-	//	GLint uTileTexture = glGetUniformLocation(backgroundShader.getId(), "tileTexture");
-	//	GLint uBackgroundTilesTexture = glGetUniformLocation(backgroundShader.getId(), "backgroundTilesTexture");
-	//
-	//	glBindVertexArray(quadVA.getId());
-	//	glActiveTexture(GL_TEXTURE0);
-	//	glBindTexture(GL_TEXTURE_2D, tilesetTexture.getId());
-	//	glActiveTexture(GL_TEXTURE1);
-	//	glBindTexture(GL_TEXTURE_2D, backgroundTilesTexture.getId());
-	//
-	//	glUniformMatrix4fv(uWorldToScreen, 1, false, &worldToScreen[0][0]);
-	//	glUniform2f(uBackgorundSize, (float) BACKGROUND_SIZE, (float) BACKGROUND_SIZE);
-	//	glUniform1i(uTileTexture, 0);
-	//	glUniform1i(uBackgroundTilesTexture, 1);
-	//
-	//	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-	//}
+	void Renderer::renderSpriteGrids(glm::mat4& worldToScreen)
+	{
+		glUseProgram(spriteGridShader.getId());
+		GLint uWorldPosition = glGetUniformLocation(spriteGridShader.getId(), "worldPosition");
+		GLint uWorldToScreen = glGetUniformLocation(spriteGridShader.getId(), "worldToScreen");
+		GLint uSpriteGridSize = glGetUniformLocation(spriteGridShader.getId(), "spriteGridSize");
+		GLint uTileTexture = glGetUniformLocation(spriteGridShader.getId(), "tileTexture");
+		GLint uSpriteGridTilesTexture = glGetUniformLocation(spriteGridShader.getId(), "spriteGridTilesTexture");
+
+		for (auto& spriteGrid: spriteGrids) {
+			if (spriteGrid->dirty) {
+				spriteGrid->tileTexture.reset();
+				glGenTextures(1, spriteGrid->tileTexture.getIdPtr());
+				glBindTexture(GL_TEXTURE_2D, spriteGrid->tileTexture.getId());
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+				glTexImage2D(
+						GL_TEXTURE_2D,
+						0,
+						GL_R8UI,
+						spriteGrid->width,
+						spriteGrid->height,
+						0,
+						GL_RED_INTEGER,
+						GL_UNSIGNED_BYTE,
+					  spriteGrid->tiles.data());
+
+				spriteGrid->dirty = false;
+			}
+
+			glBindVertexArray(quadVA.getId());
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, tilesetTexture.getId());
+			glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, spriteGrid->tileTexture.getId());
+
+			glUniform2f(uWorldPosition, spriteGrid->position.x, spriteGrid->position.y);
+			glUniformMatrix4fv(uWorldToScreen, 1, false, &worldToScreen[0][0]);
+			glUniform2f(uSpriteGridSize, (float)spriteGrid->width, (float)spriteGrid->height);
+			glUniform1i(uTileTexture, 0);
+			glUniform1i(uSpriteGridTilesTexture, 1);
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		}
+	}
 
 	void Renderer::renderSprites(glm::mat4& worldToScreen)
 	{
@@ -177,10 +184,15 @@ namespace graphics {
 		}
 	}
 
-	std::shared_ptr<api::Sprite> Renderer::newRenderableSprite() {
+	std::shared_ptr<api::Sprite> Renderer::newSprite() {
 		auto result = std::make_shared<api::Sprite>();
 		sprites.push_back(result);
 		return result;
+	}
+
+  api::SpriteGrid* Renderer::newSpriteGrid() {
+		spriteGrids.push_back(std::make_unique<SpriteGridImpl>());
+		return spriteGrids.back().get();
 	}
 
 	api::Camera* Renderer::getCamera() {

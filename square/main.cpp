@@ -87,7 +87,19 @@ void mainLoop() {
 	core::Scene scene;
 	scene.initialize();
 
-	for (unsigned char x = 0; x < BACKGROUND_SIZE_X; ++x) {
+
+	graphics::api::SpriteGrid* spriteGrid = scene.newSpriteGrid();
+	spriteGrid->position = glm::vec2(-4, -4);
+	spriteGrid->height = 4;
+	spriteGrid->width = 4;
+	spriteGrid->tiles = { 
+		8, 0, 0, 3,
+		0, 6, 3, 0,
+		0, 3, 6, 0,
+		3, 0, 0, 6,
+	};
+
+  for (unsigned char x = 0; x < BACKGROUND_SIZE_X; ++x) {
 		for (unsigned char y = 0; y < BACKGROUND_SIZE_Y; ++y) {
 			const BlockType *blockType = &BLOCK_TYPES[BACKGROUND_BLOCKS[y * BACKGROUND_SIZE_X + x]];
 			scene.addEntity(std::make_unique<game::Block>(scene, glm::vec2(x, BACKGROUND_SIZE_Y - 1 - y), blockType));

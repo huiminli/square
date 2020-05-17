@@ -25,7 +25,7 @@ namespace game {
 	{
 		camera = ef.getCamera();
 
-		sprite = ef.newRenderableSprite();
+		sprite = ef.newSprite();
 		sprite->position = position;
 		sprite->tileIndex = 60;
 

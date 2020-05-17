@@ -16,7 +16,8 @@ namespace core {
 
 		std::shared_ptr<physics::api::AABBCollider> newAABBCollider() override { return physics.newAABBCollider(); }
 		graphics::api::Camera* getCamera() override { return renderer.getCamera(); }
-		std::shared_ptr<graphics::api::Sprite> newRenderableSprite() override { return renderer.newRenderableSprite(); }
+		std::shared_ptr<graphics::api::Sprite> newSprite() override { return renderer.newSprite(); }
+		graphics::api::SpriteGrid* newSpriteGrid() override { return renderer.newSpriteGrid(); }
 
 	private:
 		std::list<std::unique_ptr<Entity>> entities;
